@@ -3,8 +3,11 @@ package com.moneyplay.MoneyPlay.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -19,10 +22,14 @@ public class SavingLog {
     @Column(name = "saving_log_id")
     private Long savingLogId;
 
-    private SavingProduct savingProduct;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     @Column(nullable = false)
     private int payment;
+
+    @OneToMany(mappedBy = "saving_product")
+    private List<SavingProduct> savingProduct;
 }

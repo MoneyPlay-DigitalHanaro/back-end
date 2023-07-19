@@ -25,7 +25,7 @@ public class Chat {
     private Long chatId;
 
     // 가급적이면 지연로딩만 사용 -> 즉시로딩은 N+1문제를 일으킬 수 있다.
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;

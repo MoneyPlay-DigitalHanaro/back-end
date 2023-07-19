@@ -17,4 +17,7 @@ public class School {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "school_id")
     private Long schoolId;
+
+    @OneToMany(mappedBy = "user")
+    private User user;
 }

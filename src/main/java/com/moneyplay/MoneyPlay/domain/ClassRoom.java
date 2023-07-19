@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -24,4 +25,11 @@ public class ClassRoom {
 
     @Column(nullable = false)
     private int studentClass;
+
+    @OneToMany(mappedBy = "chat")
+    private List<Chat> chats;
+
+    @OneToMany(mappedBy = "user")
+    private List<User> users;
+
 }

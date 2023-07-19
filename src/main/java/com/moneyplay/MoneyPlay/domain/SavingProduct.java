@@ -19,6 +19,10 @@ public class SavingProduct {
     @Column(name = "saving_product_id")
     private Long savingProductId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "saving_log_id")
+    private SavingLog savingLog;
+
     @Column(nullable = false)
     private String name;
 

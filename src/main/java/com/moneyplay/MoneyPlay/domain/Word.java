@@ -6,20 +6,22 @@ import lombok.Getter;
 
 import javax.persistence.*;
 
-@Entity
+@Table
 @Getter
-@Builder
 @AllArgsConstructor
-public class Corporation {
+@Builder
+public class Word {
 
-    public Corporation() {}
+    public Word() {}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "corporation_id")
-    private Long corporationId;
+    @Column(name = "word_id")
+    private Long wordId;
 
     @Column(nullable = false)
-    private String corporationName;
+    private String wordName;
 
+    @Column(nullable = false)
+    private String content;
 }
