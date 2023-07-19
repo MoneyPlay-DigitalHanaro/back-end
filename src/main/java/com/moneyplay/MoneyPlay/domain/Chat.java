@@ -14,8 +14,9 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class Chat {
+
+    public Chat() {}
 
     // @GeneratedValue(strategy = GenerationType.IDENTITY) -> id의 기본생성전략을 데이터베이스에 위임한다.
     @Id

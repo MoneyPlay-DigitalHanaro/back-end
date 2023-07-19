@@ -10,23 +10,24 @@ import javax.persistence.*;
 @Getter
 @Builder
 @AllArgsConstructor
-public class CurrentStock {
+public class SavingProduct {
 
-    public CurrentStock() {}
+    public SavingProduct() {}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "current_stock_id")
-    private Long currentStockId;
-
-    private User user;
-
-    private Corporation corporation;
+    @Column(name = "saving_product_id")
+    private Long savingProductId;
 
     @Column(nullable = false)
-    private int averagePrice;
+    private String name;
 
     @Column(nullable = false)
-    private int stockHoldingCount;
+    private int period;
 
+    @Column(nullable = false)
+    private int rate;
+
+    @Column(nullable = false)
+    private int minPrice;
 }
