@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,6 +19,6 @@ public class School {
     @Column(name = "school_id")
     private Long schoolId;
 
-    @OneToMany(mappedBy = "user")
-    private User user;
+    @OneToMany(mappedBy = "school")
+    private List<User> user;
 }

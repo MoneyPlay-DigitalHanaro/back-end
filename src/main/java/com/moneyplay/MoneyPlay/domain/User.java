@@ -1,10 +1,18 @@
 package com.moneyplay.MoneyPlay.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.util.List;
 
+@Entity
+@Getter
+@Builder
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -37,15 +45,15 @@ public class User {
     @Column(nullable = false)
     private String studentProfile;
 
-    @OneToOne(mappedBy = "user")
-    private Chat chat;
+    @OneToMany(mappedBy = "user")
+    private List<Chat> chat;
 
-    @OneToMany(mappedBy = "current_stock")
-    private CurrentStock currentStock;
+    @OneToMany(mappedBy = "user")
+    private List<CurrentStock> currentStock;
 
-    @OneToMany(mappedBy = "point")
-    private Point point;
+    @OneToMany(mappedBy = "user")
+    private List<Point> point;
 
-    @OneToMany(mappedBy = "stock_trade_history")
-    private StockTradeHistory stockTradeHistory;
+    @OneToMany(mappedBy = "user")
+    private List<StockTradeHistory> stockTradeHistory;
 }
