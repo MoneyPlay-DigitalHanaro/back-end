@@ -51,8 +51,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<CurrentStock> currentStock;
 
-    @OneToMany(mappedBy = "user")
-    private List<Point> point;
+    @OneToOne(mappedBy = "user")
+    private Point point;
 
     @OneToMany(mappedBy = "user")
     private List<StockTradeHistory> stockTradeHistory;

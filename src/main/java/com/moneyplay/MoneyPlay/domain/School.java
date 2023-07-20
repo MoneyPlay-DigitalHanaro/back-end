@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class School {
 
+    public School() {}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

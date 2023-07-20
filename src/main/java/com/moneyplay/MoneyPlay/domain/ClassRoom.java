@@ -26,10 +26,10 @@ public class ClassRoom {
     @Column(nullable = false)
     private int studentClass;
 
-    @OneToMany(mappedBy = "class_room")
+    @OneToMany(mappedBy = "classRoom")
     private List<Chat> chats;
 
-    @OneToMany(mappedBy = "class_room")
+    @OneToMany(mappedBy = "classRoom")
     private List<User> users;
 
 }

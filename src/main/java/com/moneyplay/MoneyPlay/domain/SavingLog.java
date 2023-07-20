@@ -30,6 +30,6 @@ public class SavingLog {
     @Column(nullable = false)
     private int payment;
 
-    @OneToMany(mappedBy = "saving_log")
+    @OneToMany(mappedBy = "savingLog")
     private List<SavingProduct> savingProduct;
 }
