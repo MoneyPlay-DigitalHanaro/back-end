@@ -3,7 +3,6 @@ package com.moneyplay.MoneyPlay.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -24,6 +23,11 @@ public class Chat {
     @Column(name="chat_id")
     private Long chatId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "school_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private School school;
+
     // 가급적이면 지연로딩만 사용 -> 즉시로딩은 N+1문제를 일으킬 수 있다.
     @ManyToOne(fetch =FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -42,4 +46,12 @@ public class Chat {
     private LocalDateTime chattingDate;
 
 
+    public void setChat(School school, User user, ClassRoom classRoom, String chattingMessage, LocalDateTime chattingDate ){
+
+        this.school = school;
+        this.user = user;
+        this.classRoom = classRoom;
+        this.chattingMessage = chattingMessage;
+        this.chattingDate = chattingDate;
+    }
 }
