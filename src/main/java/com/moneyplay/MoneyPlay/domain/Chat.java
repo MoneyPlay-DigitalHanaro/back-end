@@ -41,5 +41,4 @@ public class Chat {
     @Column(nullable = false)
     private LocalDateTime chattingDate;
 
-
 }
