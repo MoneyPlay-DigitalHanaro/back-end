@@ -31,6 +31,7 @@ public class StockService {
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json; utf8");
+
         } catch (Exception e) {
             e.printStackTrace();
         }

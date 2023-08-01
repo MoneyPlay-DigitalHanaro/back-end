@@ -6,11 +6,10 @@ import lombok.Getter;
 
 import javax.persistence.*;
 
-@Table
-@Entity
 @Getter
 @AllArgsConstructor
 @Builder
+@Entity
 public class Word {
 
     public Word() {}
