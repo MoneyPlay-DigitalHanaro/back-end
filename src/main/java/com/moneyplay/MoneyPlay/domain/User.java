@@ -1,5 +1,6 @@
 package com.moneyplay.MoneyPlay.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +15,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class User {
+
+    public User() { }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,15 +48,21 @@ public class User {
     @Column(nullable = false)
     private String studentProfile;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Chat> chat;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<CurrentStock> currentStock;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "user")
     private Point point;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<StockTradeHistory> stockTradeHistory;
+
+
 }
