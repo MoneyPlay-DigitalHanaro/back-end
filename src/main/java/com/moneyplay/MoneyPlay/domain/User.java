@@ -50,6 +50,8 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<StockTradeHistory> stockTradeHistory;
+
+
     //Oauth login
     @Column(name = "kakao_id")
     private Long kakao_id;
