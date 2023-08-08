@@ -23,6 +23,9 @@ public class School {
     @Column(name = "school_id")
     private Long schoolId;
 
+    @Column(nullable = false)
+    private int schoolName;
+
     @JsonIgnore
     @OneToMany(mappedBy = "school")
     private List<User> user;
