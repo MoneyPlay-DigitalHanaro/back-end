@@ -1,2 +1,4 @@
-package com.moneyplay.MoneyPlay.controller;public class AdminController {
+package com.moneyplay.MoneyPlay.controller;
+
+public class AdminController {
 }
