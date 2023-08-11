@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.List;
@@ -20,6 +22,9 @@ public class School {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "school_id")
     private Long schoolId;
+
+    @Column(nullable = false)
+    private int schoolName;
 
     @JsonIgnore
     @OneToMany(mappedBy = "school")
