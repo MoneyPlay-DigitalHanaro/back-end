@@ -1,6 +1,7 @@
 package com.moneyplay.MoneyPlay.controller;
 
 import com.moneyplay.MoneyPlay.domain.dto.StockAPITokenDto;
+import com.moneyplay.MoneyPlay.domain.dto.StockChartDto;
 import com.moneyplay.MoneyPlay.domain.dto.StockDataDto;
 import com.moneyplay.MoneyPlay.service.StockService;
 import lombok.RequiredArgsConstructor;
@@ -26,10 +27,12 @@ public class StockController {
             // 한국투자증권 open api 에서 접근 토큰 발급
             StockAPITokenDto stockAPITokenDto = stockService.getApiToken();
             System.out.println("API token 받아옴!");
-            StockDataDto stockDataDto = new StockDataDto(stockService.getStockData(stockAPITokenDto.getAccessToken()));
+            //StockDataDto stockDataDto = new StockDataDto(stockService.getStockData(stockAPITokenDto.getAccessToken()));
+            StockChartDto stockChartDto = stockService.getStockData(stockAPITokenDto.getAccessToken());
             System.out.println("해당 국내주식 기간별 시세 데이터 받아옴!");
-            System.out.println(stockDataDto);
-            return new ResponseEntity<>(stockDataDto, HttpStatus.OK); //추가해야함 데이터
+            //System.out.println(stockDataDto);
+            System.out.println(stockChartDto);
+            return new ResponseEntity<>(stockChartDto, HttpStatus.OK); //추가해야함 데이터
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
