@@ -31,7 +31,6 @@ public class AdminController {
         ClassRoom classRoom = classRoomRepository.findByclassRoomId(1L);
         List<User> users = userRepository.findByClassRoom(classRoom);
 
-
         return users;
     }
 
@@ -83,6 +82,11 @@ public class AdminController {
 
     // CRUD
 
+    // 추가
+
+    // 수정
+
+    // 제거
 
 
 
