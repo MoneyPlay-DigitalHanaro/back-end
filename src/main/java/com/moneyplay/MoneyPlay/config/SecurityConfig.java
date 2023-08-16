@@ -25,15 +25,7 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig implements WebMvcConfigurer {
-
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**") // 허용할 API 경로 패턴 설정
-                .allowedOrigins("http://localhost:3000") // 허용할 클라이언트 도메인 설정
-                .allowedMethods("GET", "POST") // 허용할 HTTP 메서드 설정
-                .allowCredentials(true); // 필요한 경우 인증 정보 허용
-    }
+public class SecurityConfig {
 
     @Autowired
     private final UserRepository userRepository;
@@ -51,13 +43,12 @@ public class SecurityConfig implements WebMvcConfigurer {
 
         http.authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
-                .antMatchers("/api/**","/auth/me","http://localhost:8080/api/login/oauth2/code/kakao",
-                        "https://kauth.kakao.com/oauth/token","https://kapi.kakao.com/v2/user/me",
-                        "http://localhost:8080/addition_info.html").permitAll()
+                .antMatchers("/auth/**").authenticated()
+                .antMatchers("/api/**","/getUsername","/decodeToken","/api/register/kakao","/AdditionalInfo").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()
-                .authenticationEntryPoint(new JwtAuthenticationEntryPoint());
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint());
 
         http.addFilterBefore(new JwtRequestFilter(userRepository), UsernamePasswordAuthenticationFilter.class);
 

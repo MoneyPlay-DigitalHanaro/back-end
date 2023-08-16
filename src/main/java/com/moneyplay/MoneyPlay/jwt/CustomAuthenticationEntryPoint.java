@@ -1,5 +1,7 @@
 package com.moneyplay.MoneyPlay.jwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -8,6 +10,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
 
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
@@ -15,19 +19,17 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
 
-        String errorMessage = authException.getMessage();
+        String exception = (String) request.getAttribute(JwtProperties.HEADER_STRING);
         String errorCode;
-        System.out.println(errorMessage+"5");
 
-        if (errorMessage.equals("토큰이 만료되었습니다.")) {
+        if(exception.equals("토큰이 만료되었습니다.")) {
             errorCode = "토큰이 만료되었습니다.";
-            setResponse(response, errorCode);
-        } else if (errorMessage.equals("유효하지 않은 토큰입니다.")) {
+            setResponse (response, errorCode);
+        }
+
+        if(exception.equals("유효하지 않은 토큰입니다.")) {
             errorCode = "유효하지 않은 토큰입니다.";
             setResponse(response, errorCode);
-        } else {
-            // 기타 처리
-            setResponse(response, "인증 에러 발생");
         }
     }
 

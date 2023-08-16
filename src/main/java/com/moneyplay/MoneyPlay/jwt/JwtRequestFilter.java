@@ -29,12 +29,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
     private final UserRepository userRepository;
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String jwtHeader = ((HttpServletRequest)request).getHeader(JwtProperties.HEADER_STRING);
-        System.out.println(jwtHeader+"4");
 
         if(jwtHeader == null || !jwtHeader.startsWith(JwtProperties.TOKEN_PREFIX)) {
             filterChain.doFilter(request, response);
@@ -43,19 +41,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         String token = jwtHeader.replace(JwtProperties.TOKEN_PREFIX, "");
 
-        Long userId = null;
-        String username = null;
+        Long userCode = null;
 
         try {
             // 토큰 검증 (이게 인증이기 때문에 AuthenticationManager도 필요 없음)
-            userId = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token)
+            userCode = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token)
                     .getClaim("id").asLong();
-            username = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token)
-                    .getClaim("nickname").asString();
-            System.out.println(userId+"1");
-            System.out.println(username+"2");
 
-            User user = userRepository.findByUserId(userId).orElseThrow(
+            User user = userRepository.findByUserId(userCode).orElseThrow(
                     () -> new NoSuchElementException("해당 사용자가 존재하지 않습니다.")
             );
 
@@ -77,9 +70,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             request.setAttribute(JwtProperties.HEADER_STRING, "유효하지 않은 토큰입니다.");
         }
 
-        request.setAttribute("userId", userId);
-        request.setAttribute("userName", username);
-        System.out.println("T.T");
+        request.setAttribute("userCode", userCode);
 
         filterChain.doFilter(request, response);
     }

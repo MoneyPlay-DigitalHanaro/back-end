@@ -15,6 +15,7 @@ import com.moneyplay.MoneyPlay.domain.dto.UserDetailDto;
 import com.moneyplay.MoneyPlay.jwt.JwtProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.moneyplay.MoneyPlay.jwt.OauthToken;
 import com.moneyplay.MoneyPlay.repository.ClassRoomRepository;
 import com.moneyplay.MoneyPlay.repository.SchoolRepository;
 import com.moneyplay.MoneyPlay.repository.UserRepository;
@@ -31,6 +32,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.slf4j.Logger;
@@ -61,60 +63,38 @@ public class UserService {
 
 
 
-    public String getKakaoAccessToken (String code) {
-        String access_Token = "";
-        String refresh_Token = "";
-        String reqURL = "https://kauth.kakao.com/oauth/token";
+    public OauthToken getKakaoAccessToken (String code) {
+        RestTemplate rt = new RestTemplate();
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("grant_type", "authorization_code");
+        params.add("client_id", "262778662e9437ec42d6cc9d231e88bc");
+        params.add("redirect_uri", "http://localhost:3000/api/login/oauth2/code/kakao");
+        params.add("code", code);
+        params.add("client_secret", "vhJNa6nXjI0QFOAxpH2CkTtiOpd42LRb");
+
+        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest =
+                new HttpEntity<>(params, headers);
+
+        ResponseEntity<String> accessTokenResponse = rt.exchange(
+                "https://kauth.kakao.com/oauth/token",
+                HttpMethod.POST,
+                kakaoTokenRequest,
+                String.class
+        );
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        OauthToken oauthToken = null;
         try {
-            URL url = new URL(reqURL);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-            //POST 요청을 위해 기본값이 false인 setDoOutput을 true로
-            conn.setRequestMethod("POST");
-            conn.setDoOutput(true);
-
-            //POST 요청에 필요로 요구하는 파라미터 스트림을 통해 전송
-            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
-            StringBuilder sb = new StringBuilder();
-            sb.append("grant_type=authorization_code");
-            sb.append("&client_id=262778662e9437ec42d6cc9d231e88bc");
-            sb.append("&redirect_uri=http://localhost:8080/api/login/oauth2/code/kakao");
-            sb.append("&code=" + code);
-            bw.write(sb.toString());
-            bw.flush();
-
-
-            int responseCode = conn.getResponseCode();
-            System.out.println("responseCode : " + responseCode);
-
-            //요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            String line = "";
-            String result = "";
-
-            while ((line = br.readLine()) != null) {
-                result += line;
-            }
-            System.out.println("response body : " + result);
-
-            //Gson 라이브러리에 포함된 클래스로 JSON파싱 객체 생성
-            JsonParser parser = new JsonParser();
-            JsonElement element = parser.parse(result);
-
-            access_Token = element.getAsJsonObject().get("access_token").getAsString();
-            refresh_Token = element.getAsJsonObject().get("refresh_token").getAsString();
-
-            System.out.println("access_token : " + access_Token);
-            System.out.println("refresh_token : " + refresh_Token);
-
-            br.close();
-            bw.close();
-        } catch (IOException e) {
+            oauthToken = objectMapper.readValue(accessTokenResponse.getBody(), OauthToken.class);
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
-        return access_Token;
+        return oauthToken;
     }
 
     public KakaoProfile findProfile(String token) {
@@ -204,7 +184,6 @@ public class UserService {
 
                 .withClaim("id", user.getUserId())
                 .withClaim("nickname", user.getNickname())
-                .withClaim("", user.getNickname())
 
                 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
 
@@ -213,8 +192,8 @@ public class UserService {
         return jwtToken;
     }
     public User getUser(HttpServletRequest request) {
-
-        Long userId = (Long) request.getAttribute("userId");
+        System.out.println(request);
+        Long userId = (Long) request.getAttribute("id");
         System.out.println(userId+"3");
 
         User user = userRepository.findByUserId(userId).orElseThrow(
@@ -227,8 +206,5 @@ public class UserService {
     public UserDetailDto getUserDetail(User user) {
         return new UserDetailDto(user);
     }
-
-
-
 
 }
