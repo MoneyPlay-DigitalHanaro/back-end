@@ -107,10 +107,10 @@ public class StockService {
         System.out.println("======== 국내주식기간별 시세 받아오는 로직 start======");
         System.out.println("");
 
-        String requestUrl = "https://openapivts.koreainvestment.com:29443/uapi/domestic-stock/v1/quotations/inquire-daily-itemchartprice?FID_COND_MRKT_DIV_CODE=J&FID_INPUT_ISCD=379780&FID_INPUT_DATE_1=20220501&FID_INPUT_DATE_2=20220530&FID_PERIOD_DIV_CODE=D&FID_ORG_ADJ_PRC=1";
+        String requestUrl = "https://openapivts.koreainvestment.com:29443/uapi/domestic-stock/v1/quotations/inquire-daily-itemchartprice?FID_COND_MRKT_DIV_CODE=J&FID_INPUT_ISCD=005930&FID_INPUT_DATE_1=20220501&FID_INPUT_DATE_2=20220530&FID_PERIOD_DIV_CODE=D&FID_ORG_ADJ_PRC=1";
         /*String requestParam = "{\n" +
                 "    \"FID_COND_MRKT_DIV_CODE\": \"J\",\n" +
-                "    \"FID_INPUT_ISCD\": \"379780\",\n" +
+                "    \"FID_INPUT_ISCD\": \"005930\",\n" +
                 "    \"FID_INPUT_DATE_1\": \"20220501\",\n" +
                 "    \"FID_INPUT_DATE_2\": \"20220530\",\n" +
                 "    \"FID_PERIOD_DIV_CODE\": \"D\",\n" +
@@ -219,7 +219,9 @@ public class StockService {
                 String itewhol_loan_rmnd_ratem_name = stockData.optString("itewhol_loan_rmnd_ratem name", "");
 
                 // 위에서 문자열로 받은 데이터를 이용해 주식 상세정보 Dto 객체 설정
-                StockDataDto stockDataDto = new StockDataDto(prdy_vrss, prdy_vrss_sign,
+                StockDataDto stockDataDto = new StockDataDto(
+                        prdy_vrss,
+                        prdy_vrss_sign,
                         prdy_ctrt,
                         stck_prdy_clpr,
                         acml_vol,
