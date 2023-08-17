@@ -24,7 +24,7 @@ public class School {
     private Long schoolId;
 
     @Column(nullable = false)
-    private int schoolName;
+    private String schoolName;
 
     @JsonIgnore
     @OneToMany(mappedBy = "school")
