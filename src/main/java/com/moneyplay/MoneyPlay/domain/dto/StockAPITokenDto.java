@@ -7,7 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class StockAPITokenDto {
 
-    String accessToken;
-    String tokenType;
-    int expiresIn;
+    private String accessToken;
+    private String tokenType;
+    private int expiresIn;
 }

@@ -20,8 +20,5 @@ public class Scheduler {
 
         ShuffleWords shuffleWords = new ShuffleWords(wordTodayRepository, wordRepository);
         shuffleWords.ShuffleWord();
-
-
     }
-
 }
