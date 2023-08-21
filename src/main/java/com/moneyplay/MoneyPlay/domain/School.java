@@ -29,4 +29,5 @@ public class School {
     @JsonIgnore
     @OneToMany(mappedBy = "school")
     private List<User> user;
+
 }

@@ -36,4 +36,6 @@ public class ClassRoom {
     @OneToMany(mappedBy = "classRoom")
     private List<User> users;
 
+    public void setClassRoomId(Long classRoomId) {
+    }
 }

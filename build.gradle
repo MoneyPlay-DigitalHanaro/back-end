@@ -24,6 +24,8 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
 	//implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -37,16 +39,27 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:2.3.1'
+	testImplementation 'org.springframework.security:spring-security-test'
+	implementation 'com.sun.jini:sun-util:2.1'
+	implementation 'com.google.code.gson:gson:2.8.7'
+	implementation 'com.auth0:java-jwt:4.0.0'
+	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
 	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+
+
 	//testImplementation 'org.springframework.security:spring-security-test'
 
 	implementation 'org.json:json:20200518'
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	implementation 'org.jsoup:jsoup:1.14.2'
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 }
 
 

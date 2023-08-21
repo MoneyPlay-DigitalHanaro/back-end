@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>추가정보 입력</title>
+</head>
+<body>
+<form action="/save-additional-info" method="post">
+    <input type="hidden" name="userId" value="${userId}"> <!-- userId를 hidden 필드로 전달 -->
+    <label for="school">학교:</label>
+    <input type="text" id="school" name="school" required><br>
+    <label for="classRoom">반:</label>
+    <input type="text" id="classRoom" name="classRoom" required><br>
+    <label for="studentNumber">학번:</label>
+    <input type="number" id="studentNumber" name="studentNumber" required><br>
+    <label for="studentName">이름:</label>
+    <input type="text" id="studentName" name="studentName" required><br>
+    <label for="isTeacher">교사 여부:</label>
+    <input type="checkbox" id="isTeacher" name="isTeacher"><br>
+    <label for="studentProfile">프로필:</label>
+    <input type="text" id="studentProfile" name="studentProfile"><br>
+    <button type="submit">제출</button>
+</form>
+</body>
+</html>
