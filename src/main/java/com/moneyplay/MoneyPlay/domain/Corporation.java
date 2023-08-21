@@ -22,4 +22,7 @@ public class Corporation {
     @Column(nullable = false)
     private String corporationName;
 
+    @Column(nullable = false)
+    private String code;
+
 }
