@@ -1,9 +1,7 @@
 package com.moneyplay.MoneyPlay.service;
 
-import com.moneyplay.MoneyPlay.domain.dto.StockAPITokenDto;
-import com.moneyplay.MoneyPlay.domain.dto.StockChartDto;
-import com.moneyplay.MoneyPlay.domain.dto.StockDataDto;
-import com.moneyplay.MoneyPlay.domain.dto.StockDayChartDto;
+import com.moneyplay.MoneyPlay.domain.dto.*;
+import com.moneyplay.MoneyPlay.repository.CorporationRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.springframework.stereotype.Service;
@@ -22,10 +20,15 @@ import org.json.JSONObject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javax.transaction.Transactional;
+
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class StockService {
+
+    private final CorporationRepository corporationRepository;
     ObjectMapper mapper;
     public StockAPITokenDto getApiToken(){
         String totalUrl = "https://openapivts.koreainvestment.com:29443//oauth2/tokenP";
@@ -291,6 +294,13 @@ public class StockService {
             }
         }
         return null;
+    }
+
+
+    public String addCorporation(CorporationAddDto corporationAddDto) {
+        corporationRepository.save(corporationAddDto.toEntity());
+
+        return corporationAddDto.getCorporationName();
     }
 
 }
