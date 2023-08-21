@@ -25,12 +25,12 @@ public class UserDetailDto {
     private String image;
     private String nickname;
 
-    private String eMail;
+    private String email;
 
     public UserDetailDto(User user) {
         this.userId = user.getUserId();
         this.kakao_id = user.getKakao_id();
-        this.eMail = user.getEMail();
+        this.email = user.getEmail();
         this.nickname = user.getNickname();
         this.image = user.getImage();
         this.studentName=user.getStudentName();

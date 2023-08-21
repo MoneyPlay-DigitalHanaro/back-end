@@ -2,48 +2,53 @@ package com.moneyplay.MoneyPlay.service.ChatService;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
+
+//텍스트 메시지만 처리하는 구현을 위한 편리한 기본 클래스
 @Component
 @Log4j2
 public class ChatHandler extends TextWebSocketHandler {
 
-    private static List<WebSocketSession> list = new ArrayList<>();
+    //웹소켓 세션을 담아둘 맵
 
+    HashMap<String, WebSocketSession> sessionMap = new HashMap<>();
+
+    // 웹소켓 클라이언트가 텍스트 메시지를 전송할 때 호출
     @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-        String payload = message.getPayload();
-        log.info("payload : " + payload);
+    public void handleTextMessage(WebSocketSession session, TextMessage message) {
 
-        for(WebSocketSession sess: list) {
-            sess.sendMessage(message);
+        String msg = message.getPayload();
+        for(String key : sessionMap.keySet()) {
+            WebSocketSession wss = sessionMap.get(key);
+            try {
+                wss.sendMessage(new TextMessage(msg));
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    /* Client가 접속 시 호출되는 메서드 */
+    // 웹소켓이 연결되면 호출되는 함수
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 
-        list.add(session);
-
-        log.info(session + " 클라이언트 접속");
+        super.afterConnectionEstablished(session);
+        sessionMap.put(session.getId(), session);
     }
 
-    /* Client가 접속 해제 시 호출되는 메서드드 */
+    // 웹소켓이 종료되면 호출되는 함수
 
-    @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-
-        log.info(session + " 클라이언트 접속 해제");
-        list.remove(session);
-    }
+//    @Override
+//    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+//
+//        sessionMap.remove(session.getId());
+//        super.afterConnectionClosed(session, status);
+//    }
 
 
 }

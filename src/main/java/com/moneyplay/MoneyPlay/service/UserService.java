@@ -4,51 +4,36 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.moneyplay.MoneyPlay.domain.ClassRoom;
 import com.moneyplay.MoneyPlay.domain.KakaoProfile;
 import com.moneyplay.MoneyPlay.domain.OauthEnums.Role;
 import com.moneyplay.MoneyPlay.domain.School;
 import com.moneyplay.MoneyPlay.domain.User;
+import com.moneyplay.MoneyPlay.domain.dto.AddInfoDto;
 import com.moneyplay.MoneyPlay.domain.dto.UserDetailDto;
-import com.moneyplay.MoneyPlay.jwt.JwtProperties;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.moneyplay.MoneyPlay.jwt.OauthToken;
+import com.moneyplay.MoneyPlay.jwt.*;
 import com.moneyplay.MoneyPlay.repository.ClassRoomRepository;
 import com.moneyplay.MoneyPlay.repository.SchoolRepository;
 import com.moneyplay.MoneyPlay.repository.UserRepository;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.security.Key;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class UserService {
 
 
@@ -139,7 +124,7 @@ public class UserService {
         User user = null;
 
         try {
-            user = userRepository.findByeMail(profile.getKakao_account().getEmail()).get();
+            user = userRepository.findByEmail(profile.getKakao_account().getEmail()).get();
         } catch (NoSuchElementException e) {
 
             Long classRoomId = 1L;
@@ -151,13 +136,13 @@ public class UserService {
             String studentName = "사람1";
 
             ClassRoom classRoom = classRoomRepository.findByclassRoomId(classRoomId);
-            School school = schoolRepository.findBySchoolId(schoolId);
+            School school = schoolRepository.findByschoolId(schoolId);
 
             user = User.builder()
                     .kakao_id(profile.getId())
                     .image(profile.getKakao_account().getProfile().getProfile_image_url())
                     .nickname(profile.getKakao_account().getProfile().getNickname())
-                    .eMail(profile.getKakao_account().getEmail())
+                    .email(profile.getKakao_account().getEmail())
                     .myRole(Role.MEMBER)
                     .classRoom(classRoom)
                     .school(school)
@@ -179,7 +164,7 @@ public class UserService {
 
         String jwtToken = JWT.create()
 
-                .withSubject(user.getEMail())
+                .withSubject(user.getEmail())
                 .withExpiresAt(new Date(System.currentTimeMillis()+ JwtProperties.EXPIRATION_TIME))
 
                 .withClaim("id", user.getUserId())
@@ -206,5 +191,69 @@ public class UserService {
     public UserDetailDto getUserDetail(User user) {
         return new UserDetailDto(user);
     }
+
+    public User convertToEntity(AddInfoDto addInfoDto) {
+
+
+        ClassRoom classRoom = classRoomRepository.findByStudentGradeAndStudentClass(addInfoDto.getStudentGrade(), addInfoDto.getStudentClass()).orElseThrow(
+                () -> new NoSuchElementException("해당 학년, 반이 존재하지 않습니다.")
+        );
+
+        School school = schoolRepository.findBySchoolName(addInfoDto.getSchoolName()).orElseThrow(
+                () -> new NoSuchElementException("해당 학교가 존재하지 않습니다.")
+        );
+
+        User user = new User();
+        user = User.builder()
+                .email(addInfoDto.getEmail())
+                .image(addInfoDto.getImage())
+                .nickname(addInfoDto.getNickname())
+                .myRole(Role.MEMBER)
+                .classRoom(classRoom)
+                .school(school)
+                .isTeacher(addInfoDto.isTeacher())
+                .studentNumber(addInfoDto.getStudentNumber())
+                .studentProfile(addInfoDto.getStudentProfile())
+                .kakao_id(addInfoDto.getKakao_id())
+                .studentName(addInfoDto.getStudentName())
+                .build();
+
+        return user;
+    }
+
+
+    public void serviceLogout(PrincipalDetails principalDetails){
+        // 서비스 로그아웃
+        OauthToken oauthToken = OauthTokenMap.getInstance().getOauthTokens().get(principalDetails.getUser().getUserId());
+        System.out.println(oauthToken);
+
+        RestTemplate rt = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + oauthToken.getAccess_token());
+        HttpEntity<MultiValueMap<String, String>> logoutRequest = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<String> response = rt.exchange(
+                    "https://kapi.kakao.com/v1/user/logout",
+                    HttpMethod.POST,
+                    logoutRequest,
+                    String.class
+            );
+
+            System.out.println("회원번호 " + response.getBody() + " 로그아웃");
+            deleteOauthToken(principalDetails.getUser().getUserId());
+
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.AUTH_EXPIRED_ACCESS_TOKEN);
+        }
+
+    }
+
+    public void deleteOauthToken(Long userId) {
+        // OauthTokenMap에서 삭제
+        OauthTokenMap.getInstance().getOauthTokens().remove(userId);
+    }
+
 
 }

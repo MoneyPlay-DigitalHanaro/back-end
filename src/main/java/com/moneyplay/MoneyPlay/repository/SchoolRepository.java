@@ -1,10 +1,14 @@
 package com.moneyplay.MoneyPlay.repository;
 
-import com.moneyplay.MoneyPlay.domain.ClassRoom;
 import com.moneyplay.MoneyPlay.domain.School;
+import com.moneyplay.MoneyPlay.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SchoolRepository extends JpaRepository<School, Long> {
-    School findBySchoolId(Long SchoolId);
+import java.util.Optional;
 
+public interface SchoolRepository extends JpaRepository<School,Long> {
+
+    School findByschoolId(Long schoolId);
+
+    Optional<School> findBySchoolName(String schoolName);
 }

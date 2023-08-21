@@ -20,6 +20,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
 
         String exception = (String) request.getAttribute(JwtProperties.HEADER_STRING);
+        System.out.println(exception);
         String errorCode;
 
         if(exception.equals("토큰이 만료되었습니다.")) {

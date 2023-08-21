@@ -27,6 +27,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.1'
+	// jsoup 의존성 추가
+	implementation 'org.jsoup:jsoup:1.15.3'
+
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'
@@ -37,6 +40,18 @@ dependencies {
 	implementation 'com.sun.jini:sun-util:2.1'
 	implementation 'com.google.code.gson:gson:2.8.7'
 	implementation 'com.auth0:java-jwt:4.0.0'
+	testImplementation 'org.springframework.security:spring-security-test'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+
+
+	//testImplementation 'org.springframework.security:spring-security-test'
+
 	implementation 'org.json:json:20200518'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
