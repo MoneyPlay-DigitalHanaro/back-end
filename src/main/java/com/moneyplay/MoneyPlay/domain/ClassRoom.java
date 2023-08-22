@@ -28,9 +28,9 @@ public class ClassRoom {
     @Column(nullable = false)
     private int studentClass;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "classRoom")
-    private List<Chat> chats;
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "classRoom")
+//    private List<Chat> chats;
 
     @JsonIgnore
     @OneToMany(mappedBy = "classRoom")

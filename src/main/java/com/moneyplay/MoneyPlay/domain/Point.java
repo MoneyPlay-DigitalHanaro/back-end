@@ -3,6 +3,7 @@ package com.moneyplay.MoneyPlay.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -32,6 +33,7 @@ public class Point {
     @Column(nullable = false)
     private int savingPoint;
 
+    @Setter
     @Column(nullable = false)
     private int holdingPoint;
 }

@@ -11,20 +11,22 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Word {
+public class WordToday {
 
-    public Word() {}
+    public WordToday() {}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "word_id")
-    private Long wordId;
+    private Long wordTodayId;
 
     @Setter
     @Column(nullable = false)
-    private String wordName;
+    private String wordTodayName;
 
     @Setter
     @Column(nullable = false)
-    private String content;
+    private String Todaycontent;
+
+
 }
