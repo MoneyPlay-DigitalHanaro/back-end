@@ -1,17 +1,20 @@
 package com.moneyplay.MoneyPlay.controller;
 
+import com.moneyplay.MoneyPlay.domain.Corporation;
+import com.moneyplay.MoneyPlay.domain.dto.CorporationAddDto;
 import com.moneyplay.MoneyPlay.domain.dto.StockAPITokenDto;
 import com.moneyplay.MoneyPlay.domain.dto.StockChartDto;
 import com.moneyplay.MoneyPlay.domain.dto.StockDataDto;
 import com.moneyplay.MoneyPlay.service.StockService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +24,7 @@ public class StockController {
     private final StockService stockService;
 
     // 국내 주식 시세 조회 URL
+    @ApiOperation(value = "해당 주식 3개월 시세 조회")
     @GetMapping
     public ResponseEntity<?> threeMonthStockDayChart() {
         try {
@@ -36,5 +40,18 @@ public class StockController {
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @ApiOperation(value = "주식 회사 추가")
+    @PostMapping("/add")
+    private ResponseEntity<?> corporationAdd(HttpServletRequest request, @Validated @RequestBody CorporationAddDto corporationAddDto) {
+        try {
+            String corporationName = stockService.addCorporation(corporationAddDto);
+
+            return new ResponseEntity<>(corporationName + "등록완료", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
     }
 }
