@@ -37,19 +37,19 @@ public class UserController {
         Optional<User> optionalUser = userRepository.findByEmail(kakaoProfile.getKakao_account().email);
 
         //사용자가 현재있는지 이메일로 확인 (카카오 로그인 이니까)
-//        if (!optionalUser.isPresent()) {
-//
-//            return ApplicationResponse.ok(ErrorCode.SUCCESS_CREATED,
-//                    kakaoProfile.getKakao_account().email + kakaoProfile.getKakao_account().profile.nickname
-//                            + kakaoProfile.id);
-//        }else {
+        if (!optionalUser.isPresent()) {
+
+            return ApplicationResponse.ok(ErrorCode.AUTH_USER_NOT_FOUND,
+                    kakaoProfile.getKakao_account().email + kakaoProfile.getKakao_account().profile.nickname
+                            + kakaoProfile.id + kakaoProfile.getProperties().thumbnail_image);
+        }else {
             //발급 받은 OauthToken으로 카카오 회원 정보 DB저장하고 Jwt생성
             String jwtToken = userService.saveUserAndGetToken(oauthToken.getAccess_token());
 
             //ApplicationResponse로 반환시켜서 에러 코드 받기
             return ApplicationResponse.ok(ErrorCode.SUCCESS_CREATED, JwtProperties.TOKEN_PREFIX + jwtToken);
 
-//        }
+        }
     }
 
 
