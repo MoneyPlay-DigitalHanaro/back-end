@@ -31,7 +31,7 @@ public class StockController {
     // 국내 주식 시세 조회 URL
     @ApiOperation(value = "해당 주식 3개월 시세 조회")
     @GetMapping("/{name}")
-    public ResponseEntity<?> threeMonthStockDayChart(@PathVariable String name) {
+    public ResponseEntity<?> stockThreeMonthDayChart(@PathVariable String name) {
         try {
 
             System.out.println("name= " + name);
@@ -55,7 +55,7 @@ public class StockController {
 
     @ApiOperation(value = "모든 주식 회사 리스트 조회")
     @GetMapping
-    public ResponseEntity<?> allStockDataList() {
+    public ResponseEntity<?> stockAllDataList() {
         try {
             // 한국투자증권 open api 에서 접근 토큰 발급
             StockAPITokenDto stockAPITokenDto = stockService.getApiToken();
@@ -71,7 +71,7 @@ public class StockController {
 
     @ApiOperation(value = "주식 회사 추가")
     @PostMapping("/add")
-    private ResponseEntity<?> corporationAdd(HttpServletRequest request, @Validated @RequestBody CorporationAddDto corporationAddDto) {
+    public ResponseEntity<?> corporationAdd(HttpServletRequest request, @Validated @RequestBody CorporationAddDto corporationAddDto) {
         try {
             String corporationName = corporationService.addCorporation(corporationAddDto);
 
@@ -81,4 +81,6 @@ public class StockController {
         }
 
     }
+
+    public ResponseEntity<?>
 }
