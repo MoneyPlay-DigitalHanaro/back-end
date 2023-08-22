@@ -7,7 +7,6 @@ import com.moneyplay.MoneyPlay.repository.ClassRoomRepository;
 import com.moneyplay.MoneyPlay.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -78,15 +77,6 @@ public class AdminController {
 
 
 
-
-
-    // CRUD
-
-    // 추가
-
-    // 수정
-
-    // 제거
 
 
 

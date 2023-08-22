@@ -29,12 +29,6 @@ public class WordController {
 
         List<WordToday> words = wordTodayRepository.findAll();
 
-        System.out.println(words.size());
-
-        for(int i=0;i<words.size();i++){
-            System.out.println(words.get(i));
-        }
-
         return words;
 
     }

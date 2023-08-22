@@ -49,6 +49,7 @@ public class User {
     @JsonIgnore
     @OneToOne(mappedBy = "user")
     private Point point;
+
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<StockTradeHistory> stockTradeHistory;
@@ -57,10 +58,13 @@ public class User {
     //Oauth login
     @Column(name = "kakao_id")
     private Long kakao_id;
+
     @Column(name = "image_url")
     private String image;
+
     @Column(nullable = false, unique = true)
     private String nickname;
+
     @Column(nullable = false, name = "my_role", updatable = false)
     @Enumerated(EnumType.STRING)
     private Role myRole;
@@ -70,4 +74,5 @@ public class User {
         }
         return new ArrayList<>();
     }
+
 }
