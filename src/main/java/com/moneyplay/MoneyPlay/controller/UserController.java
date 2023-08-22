@@ -49,7 +49,7 @@ public class UserController {
             //ApplicationResponse로 반환시켜서 에러 코드 받기
             return ApplicationResponse.ok(ErrorCode.SUCCESS_CREATED, JwtProperties.TOKEN_PREFIX + jwtToken);
 
-        }
+//        }
     }
 
 
