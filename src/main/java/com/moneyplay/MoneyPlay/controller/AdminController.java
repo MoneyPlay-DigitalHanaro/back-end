@@ -1,5 +1,7 @@
 package com.moneyplay.MoneyPlay.controller;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.moneyplay.MoneyPlay.domain.ClassRoom;
 import com.moneyplay.MoneyPlay.domain.User;
 import com.moneyplay.MoneyPlay.domain.dto.AdminDto;
@@ -23,11 +25,18 @@ public class AdminController {
     // 메인 페이지 접속 시 그 반에 있는 학생 정보 return
 
     @GetMapping("/admin")
-    public List<User> main_page(){
+    public List<User> main_page(@RequestHeader("Authorization") String token2){
 
         // 토큰으로 교실 고유 키 출력 하기
+        String token = token2.substring(7);
 
-        ClassRoom classRoom = classRoomRepository.findByclassRoomId(1L);
+        DecodedJWT decodedJWT = JWT.decode(token);
+        Long id = decodedJWT.getClaim("id").asLong();
+
+        User user = userRepository.findByuserId(id);
+        ClassRoom classRooms = user.getClassRoom();
+
+        ClassRoom classRoom = classRoomRepository.findByclassRoomId(classRooms.getClassRoomId());
         List<User> users = userRepository.findByClassRoom(classRoom);
 
         return users;

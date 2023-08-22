@@ -1,5 +1,7 @@
 package com.moneyplay.MoneyPlay.controller;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.moneyplay.MoneyPlay.domain.Board;
 import com.moneyplay.MoneyPlay.domain.ClassRoom;
 import com.moneyplay.MoneyPlay.domain.User;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,16 +26,24 @@ public class BoardController {
 
     // 게시판 화면 입장 시
     @GetMapping("/board")
-    public List<BoardDto> Entrance(){
+    public List<BoardDto> Entrance(@RequestHeader("Authorization") String token2){
 
         // 토큰을 이용해서 학생 고유 키, 교실 고유키를 받야야됌(받았다고 가정함)
 
-        Long userId = 1L;
-        Long classId = 1L;
+
+        String token = token2.substring(7);
+
+        DecodedJWT decodedJWT = JWT.decode(token);
+        Long id = decodedJWT.getClaim("id").asLong();
+
+        User user = userRepository.findByuserId(id);
+        ClassRoom classRooms = user.getClassRoom();
+
 
         // 교실 고유키 찾기
-        ClassRoom classRoom = classRoomRepository.findByclassRoomId(classId);
+        ClassRoom classRoom = classRoomRepository.findByclassRoomId(classRooms.getClassRoomId());
 
+        System.out.println(classRooms.getClassRoomId());
 
         List<Board> boards = boardRepository.findByclassRoom(classRoom);
 
@@ -54,19 +65,39 @@ public class BoardController {
 
     // 글 작성 시
     @PostMapping("/board")
-    public List<Board> write(@PathVariable String message){
+    public List<BoardDto> write(@RequestBody Map<String, String> requestBody,@RequestHeader("Authorization") String token2){
 
-        Long userId = 1L;
-        Long classId = 1L;
+        String token = token2.substring(7);
 
-        User user = userRepository.findByuserId(userId);
-        ClassRoom classRoom = classRoomRepository.findByclassRoomId(classId);
+        DecodedJWT decodedJWT = JWT.decode(token);
+        Long id = decodedJWT.getClaim("id").asLong();
+
+        User user = userRepository.findByuserId(id);
+        ClassRoom classRooms = user.getClassRoom();
+
+        String message = requestBody.get("message");
+
+
+        ClassRoom classRoom = classRoomRepository.findByclassRoomId(classRooms.getClassRoomId());
 
         Board board = new Board(user,classRoom,message);
 
         boardRepository.save(board);
 
-        return boardRepository.findByclassRoom(classRoom);
+        List<Board> boards = boardRepository.findByclassRoom(classRoom);
+
+        List<BoardDto> returnBoard = new ArrayList<>();
+
+        for(int i=0; i<boards.size(); i++){
+
+            BoardDto boardDto = new BoardDto(boards.get(i).getBoardId(),boards.get(i).getUser().getStudentName(),boards.get(i).getMessage());
+
+            returnBoard.add(boardDto);
+        }
+
+
+
+        return returnBoard;
     }
 
 
