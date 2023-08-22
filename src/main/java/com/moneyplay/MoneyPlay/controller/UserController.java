@@ -42,7 +42,7 @@ public class UserController {
             return ApplicationResponse.ok(ErrorCode.AUTH_USER_NOT_FOUND,
                     kakaoProfile.getKakao_account().email + kakaoProfile.getKakao_account().profile.nickname
                             + kakaoProfile.id + kakaoProfile.getProperties().thumbnail_image);
-        }else {
+        } else {
             //발급 받은 OauthToken으로 카카오 회원 정보 DB저장하고 Jwt생성
             String jwtToken = userService.saveUserAndGetToken(oauthToken.getAccess_token());
 
@@ -50,8 +50,8 @@ public class UserController {
             return ApplicationResponse.ok(ErrorCode.SUCCESS_CREATED, JwtProperties.TOKEN_PREFIX + jwtToken);
 
 //        }
+        }
     }
-
 
     @PostMapping("/api/register/kakao")
     public ResponseEntity<?> register(@RequestBody AddInfoDto addInfoDto) {

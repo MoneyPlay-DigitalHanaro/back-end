@@ -76,7 +76,6 @@ public class BoardController {
 
         String message = requestBody.get("message");
 
-
         ClassRoom classRoom = classRoomRepository.findByclassRoomId(classRooms.getClassRoomId());
 
         Board board = new Board(user,classRoom,message);
@@ -93,8 +92,6 @@ public class BoardController {
 
             returnBoard.add(boardDto);
         }
-
-
 
         return returnBoard;
     }

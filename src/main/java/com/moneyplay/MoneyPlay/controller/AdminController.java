@@ -32,10 +32,10 @@ public class AdminController {
     // 메인 페이지 접속 시 그 반에 있는 학생 정보 return
 
     @GetMapping("/admin")
-    public AdminDataDto main_page(@RequestHeader("Authorization") String token2){
+    public AdminDataDto main_page(@RequestHeader("Authorization") String tokens){
 
         // 토큰으로 교실 고유 키 출력 하기
-        String token = token2.substring(7);
+        String token = tokens.substring(7);
 
         DecodedJWT decodedJWT = JWT.decode(token);
         Long id = decodedJWT.getClaim("id").asLong();
@@ -76,6 +76,7 @@ public class AdminController {
     }
 
 
+
     // 일괄 초기화 -> 0
     @Transactional
     @PostMapping("/admin/total_init")
@@ -88,7 +89,7 @@ public class AdminController {
         List<User> users = userRepository.findByClassRoom(classRoom);
 
         for(int i=0; i<users.size(); i++){
-            users.get(i).getPoint().setHoldingPoint(0);
+            users.get(i).getPoint().setHoldingPoint(0L);
         }
 
         return userRepository.findAll();

@@ -36,3 +36,4 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.getWriter().println(JwtProperties.HEADER_STRING + " : " + errorCode);
     }
 }
+
