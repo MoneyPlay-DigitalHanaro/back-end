@@ -30,7 +30,6 @@ public class BoardController {
 
         // 토큰을 이용해서 학생 고유 키, 교실 고유키를 받야야됌(받았다고 가정함)
 
-
         String token = token2.substring(7);
 
         DecodedJWT decodedJWT = JWT.decode(token);

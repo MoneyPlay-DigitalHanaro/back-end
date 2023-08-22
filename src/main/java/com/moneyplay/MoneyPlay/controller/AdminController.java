@@ -2,10 +2,15 @@ package com.moneyplay.MoneyPlay.controller;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.moneyplay.MoneyPlay.domain.ClassDailyPoint;
 import com.moneyplay.MoneyPlay.domain.ClassRoom;
 import com.moneyplay.MoneyPlay.domain.User;
+import com.moneyplay.MoneyPlay.domain.UserDailyPoint;
+import com.moneyplay.MoneyPlay.domain.dto.AdminDataDto;
 import com.moneyplay.MoneyPlay.domain.dto.AdminDto;
 import com.moneyplay.MoneyPlay.repository.ClassRoomRepository;
+import com.moneyplay.MoneyPlay.repository.DailyRepository.ClassDailyPointRepository;
+import com.moneyplay.MoneyPlay.repository.DailyRepository.UserDailyPointRepository;
 import com.moneyplay.MoneyPlay.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -21,11 +26,13 @@ public class AdminController {
 
     final UserRepository userRepository;
     final ClassRoomRepository classRoomRepository;
+    final UserDailyPointRepository userDailyPointRepository;
+    final ClassDailyPointRepository classDailyPointRepository;
 
     // 메인 페이지 접속 시 그 반에 있는 학생 정보 return
 
     @GetMapping("/admin")
-    public List<User> main_page(@RequestHeader("Authorization") String token2){
+    public AdminDataDto main_page(@RequestHeader("Authorization") String token2){
 
         // 토큰으로 교실 고유 키 출력 하기
         String token = token2.substring(7);
@@ -39,7 +46,13 @@ public class AdminController {
         ClassRoom classRoom = classRoomRepository.findByclassRoomId(classRooms.getClassRoomId());
         List<User> users = userRepository.findByClassRoom(classRoom);
 
-        return users;
+        List<UserDailyPoint> userDailyPoints = userDailyPointRepository.findAll();
+        List<ClassDailyPoint> classDailyPoints = classDailyPointRepository.findAll();
+
+        AdminDataDto adminDataDto = new AdminDataDto(users,userDailyPoints,classDailyPoints);
+
+
+        return adminDataDto;
     }
 
 
