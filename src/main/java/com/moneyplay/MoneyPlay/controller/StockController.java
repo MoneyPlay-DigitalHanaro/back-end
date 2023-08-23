@@ -1,10 +1,11 @@
 package com.moneyplay.MoneyPlay.controller;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.moneyplay.MoneyPlay.domain.Corporation;
-import com.moneyplay.MoneyPlay.domain.dto.CorporationAddDto;
-import com.moneyplay.MoneyPlay.domain.dto.StockAPITokenDto;
-import com.moneyplay.MoneyPlay.domain.dto.StockChartDto;
-import com.moneyplay.MoneyPlay.domain.dto.StockDataDto;
+import com.moneyplay.MoneyPlay.domain.User;
+import com.moneyplay.MoneyPlay.domain.dto.*;
+import com.moneyplay.MoneyPlay.repository.UserRepository;
 import com.moneyplay.MoneyPlay.service.CorporationService;
 import com.moneyplay.MoneyPlay.service.StockService;
 import io.swagger.annotations.ApiOperation;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +29,8 @@ public class StockController {
     private final StockService stockService;
 
     private final CorporationService corporationService;
+
+    private final UserRepository userRepository;
 
     // 국내 주식 시세 조회 URL
     @ApiOperation(value = "해당 주식 3개월 시세 조회")
@@ -69,18 +73,36 @@ public class StockController {
         }
     }
 
-    @ApiOperation(value = "주식 회사 추가")
-    @PostMapping("/add")
-    public ResponseEntity<?> corporationAdd(HttpServletRequest request, @Validated @RequestBody CorporationAddDto corporationAddDto) {
-        try {
-            String corporationName = corporationService.addCorporation(corporationAddDto);
 
-            return new ResponseEntity<>(corporationName + "등록완료", HttpStatus.OK);
-        } catch (Exception e) {
+
+    @ApiOperation(value = "주식 매수")
+    @PostMapping("/buy")
+    public ResponseEntity<?> stockBuy(@RequestHeader("Authorization") String tokens, @Validated @RequestBody StockBuyDto stockBuyDto) {
+
+        try {
+            // 헤더에서 토큰을 가져온다.
+            String token =tokens.substring(7);
+
+            // 토큰값을 decode하여 id값을 가져온다.
+            DecodedJWT decodedJWT = JWT.decode(token);
+            Long id = decodedJWT.getClaim("id").asLong();
+
+            // userId를 이용해 유저 정보를 가져온다.
+            User user = userRepository.findByUserId(id).orElseThrow(
+                    () -> new NoSuchElementException("해당 유저에 대한 정보가 없습니다.")
+            );
+
+            // 유저가 매수 가능한 포인트를 가지고 있는지 확인
+            if (user.getPoint().getHoldingPoint() >= stockBuyDto.getStockPresentPrice()*stockBuyDto.getBuyAmount()) {
+                stockService.buyStock(user, stockBuyDto);
+            }
+            else {
+                throw new Exception("매수할 금액이 부족합니다.");
+            }
+
+            return new ResponseEntity<>("매수 성공",HttpStatus.OK);
+        } catch(Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
     }
-
-    public ResponseEntity<?>
 }

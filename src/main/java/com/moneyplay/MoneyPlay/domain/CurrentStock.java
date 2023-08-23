@@ -16,6 +16,12 @@ public class CurrentStock {
 
     public CurrentStock() {}
 
+    public CurrentStock(User user, Corporation corporation, int averagePrice, int stockHoldingCount) {
+        this.user = user;
+        this.corporation = corporation;
+        this.averagePrice = averagePrice;
+        this.stockHoldingCount = stockHoldingCount;
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "current_stock_id")

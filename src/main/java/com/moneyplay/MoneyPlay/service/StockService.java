@@ -1,8 +1,11 @@
 package com.moneyplay.MoneyPlay.service;
 
-import com.moneyplay.MoneyPlay.domain.Corporation;
+import com.moneyplay.MoneyPlay.domain.*;
 import com.moneyplay.MoneyPlay.domain.dto.*;
 import com.moneyplay.MoneyPlay.repository.CorporationRepository;
+import com.moneyplay.MoneyPlay.repository.CurrentStockRepository;
+import com.moneyplay.MoneyPlay.repository.PointRepository;
+import com.moneyplay.MoneyPlay.repository.StockTradeHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.springframework.stereotype.Service;
@@ -33,6 +36,12 @@ import javax.transaction.Transactional;
 public class StockService {
 
     private final CorporationRepository corporationRepository;
+
+    private final StockTradeHistoryRepository stockTradeHistoryRepository;
+
+    private final CurrentStockRepository currentStockRepository;
+
+    private final PointRepository pointRepository;
     ObjectMapper mapper;
     public StockAPITokenDto getApiToken(){
         String totalUrl = "https://openapivts.koreainvestment.com:29443//oauth2/tokenP";
@@ -391,7 +400,25 @@ public class StockService {
         return stockDataList;
     }
 
+    public void buyStock(User user, StockBuyDto stockBuyDto) {
 
+        // 주식 회사 정보를 가져온다.
+        Corporation corporation = corporationRepository.findByCorporationName(stockBuyDto.getName()).orElseThrow(
+                () -> new NoSuchElementException("해당 주식 회사가 존재하지 않습니다.")
+        );
+        // 주식 거래 내역 테이블에 매수 내역 추가
+        StockTradeHistory stockTradeHistory = new StockTradeHistory(user,corporation, stockBuyDto);
+        stockTradeHistoryRepository.save(stockTradeHistory);
+        // 사용자의 현재 보유 주식 정보 추가
+        CurrentStock currentStock = new CurrentStock(user, corporation,stockBuyDto.getStockPresentPrice(), stockBuyDto.getBuyAmount());
+        currentStockRepository.save(currentStock);
+        // 학생 포인트 테이블에서 보유한 포인트 현황 업데이트
+        Point point = pointRepository.findByUser(user).orElseThrow(
+                () -> new NoSuchElementException("해당 유저에 대한 포인트 데이터가 없습니다.")
+        );
+        point.updateHoldingPoint(point.getHoldingPoint() - (stockBuyDto.getStockPresentPrice()*stockBuyDto.getBuyAmount()));
+        pointRepository.save(point);
+    }
 
 
 }
