@@ -17,4 +17,13 @@ public class DepositType {
     private String DepositName;
 
     private Long DepositInterestRate;
+
+    private Long minAmount;
+
+    private Long maxAmount;
+
+    private int minMonth;
+
+    private int maxMonth;
+
 }

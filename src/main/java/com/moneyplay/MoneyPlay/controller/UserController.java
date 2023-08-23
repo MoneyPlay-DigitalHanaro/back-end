@@ -64,12 +64,12 @@ public class UserController {
     }
 
 
-    @GetMapping("/auth/me")
-    public ApplicationResponse<UserDetailDto> getCurrentUser(@RequestBody HttpServletRequest request) {
-        User user = userService.getUser(request);
-        UserDetailDto userDetail = userService.getUserDetail(user);
-        return ApplicationResponse.ok(ErrorCode.SUCCESS_OK, userDetail);
-    }
+//    @GetMapping("/auth/me")
+//    public ApplicationResponse<UserDetailDto> getCurrentUser(@RequestBody HttpServletRequest request) {
+//        User user = userService.getUser(request);
+//        UserDetailDto userDetail = userService.getUserDetail(user);
+//        return ApplicationResponse.ok(ErrorCode.SUCCESS_OK, userDetail);
+//    }
 
 
     @PostMapping("/decodeToken")
