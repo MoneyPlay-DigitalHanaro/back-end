@@ -8,6 +8,7 @@ import com.moneyplay.MoneyPlay.domain.User;
 import com.moneyplay.MoneyPlay.repository.DepositRepository.DepositRepository;
 import com.moneyplay.MoneyPlay.repository.DepositRepository.DepositTypeRepository;
 import com.moneyplay.MoneyPlay.repository.UserRepository;
+import com.moneyplay.MoneyPlay.service.DepositService.DepositScheduler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +31,7 @@ public class DepositController {
     public List<DepositType> depositGet() {
 
         // 적금 종류를 return 해주기
+
         return depositTypeRepository.findAll();
     }
 
