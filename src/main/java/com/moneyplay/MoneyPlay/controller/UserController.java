@@ -34,21 +34,16 @@ public class UserController {
         //카카오로부터 OauthToken 발급 받기!
         OauthToken oauthToken = userService.getKakaoAccessToken(code);
         KakaoProfile kakaoProfile = userService.findProfile(oauthToken.getAccess_token());
-        Optional<User> optionalUser = userRepository.findByEmail(kakaoProfile.getKakao_account().email);
-
-        //사용자가 현재있는지 이메일로 확인 (카카오 로그인 이니까)
+        Optional<User> optionalUser = userRepository.findByEmail(kakaoProfile.getKakao_account().email);  //사용자가 현재있는지 이메일로 확인 (카카오 로그인 이니까
         if (!optionalUser.isPresent()) {
-
             return ApplicationResponse.ok(ErrorCode.AUTH_USER_NOT_FOUND,
                     kakaoProfile.getKakao_account().email + kakaoProfile.getKakao_account().profile.nickname
                             + kakaoProfile.id + kakaoProfile.getProperties().thumbnail_image);
         }else {
             //발급 받은 OauthToken으로 카카오 회원 정보 DB저장하고 Jwt생성
             String jwtToken = userService.saveUserAndGetToken(oauthToken.getAccess_token());
-
             //ApplicationResponse로 반환시켜서 에러 코드 받기
             return ApplicationResponse.ok(ErrorCode.SUCCESS_CREATED, JwtProperties.TOKEN_PREFIX + jwtToken);
-
         }
     }
 
@@ -84,15 +79,12 @@ public class UserController {
             String nickname = decodedJWT.getClaim("nickname").asString();
             String email = decodedJWT.getClaim("sub").asString();
             Long id = decodedJWT.getClaim("id").asLong();
-
             String json = "{ \"username\": \"" + nickname + "\", \"email\": \"" + email + "\", \"id\": \"" + id + "\" }";
-
             return json;
         } catch (Exception e) {
             return "{ \"error\": \"Token invalid\" }";
         }
     }
-
 
     @GetMapping("/logout/service")
     public ApplicationResponse<String> serviceLogout(@AuthenticationPrincipal PrincipalDetails principalDetails){
@@ -100,6 +92,4 @@ public class UserController {
         userService.serviceLogout(principalDetails);
         return ApplicationResponse.ok(ErrorCode.SUCCESS_OK, "로그아웃 되었습니다.");
     }
-
-
 }

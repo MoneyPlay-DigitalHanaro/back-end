@@ -44,7 +44,7 @@ public class SecurityConfig {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .antMatchers("/news","/decodeToken").authenticated()
-                .antMatchers("/api/**","/getUsername","/api/register/kakao","/AdditionalInfo","/admin").permitAll()
+                .antMatchers("/api/**","/getUsername","/api/register/kakao","/AdditionalInfo","/admin","/logout/service").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()

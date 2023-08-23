@@ -127,33 +127,33 @@ public class UserService {
             user = userRepository.findByEmail(profile.getKakao_account().getEmail()).get();
         } catch (NoSuchElementException e) {
 
-            Long classRoomId = 1L;
-            Long schoolId = 1L;
-            Boolean isTeacher = false;
-            int studentNumber = 1;
-            String studentProfile = "123";
-            Long userId = 1L;
-            String studentName = "사람1";
-
-            ClassRoom classRoom = classRoomRepository.findByclassRoomId(classRoomId);
-            School school = schoolRepository.findByschoolId(schoolId);
-
-            user = User.builder()
-                    .kakao_id(profile.getId())
-                    .image(profile.getKakao_account().getProfile().getProfile_image_url())
-                    .nickname(profile.getKakao_account().getProfile().getNickname())
-                    .email(profile.getKakao_account().getEmail())
-                    .myRole(Role.MEMBER)
-                    .classRoom(classRoom)
-                    .school(school)
-                    .isTeacher(isTeacher)
-                    .studentNumber(studentNumber)
-                    .studentProfile(studentProfile)
-                    .userId(userId)
-                    .studentName(studentName)
-                    .build();
-
-            userRepository.save(user);
+//            Long classRoomId = 1L;
+//            Long schoolId = 1L;
+//            Boolean isTeacher = false;
+//            int studentNumber = 1;
+//            String studentProfile = "123";
+//            Long userId = 1L;
+//            String studentName = "사람1";
+//
+//            ClassRoom classRoom = classRoomRepository.findByclassRoomId(classRoomId);
+//            School school = schoolRepository.findByschoolId(schoolId);
+//
+//            user = User.builder()
+//                    .kakao_id(profile.getId())
+//                    .image(profile.getKakao_account().getProfile().getProfile_image_url())
+//                    .nickname(profile.getKakao_account().getProfile().getNickname())
+//                    .email(profile.getKakao_account().getEmail())
+//                    .myRole(Role.MEMBER)
+//                    .classRoom(classRoom)
+//                    .school(school)
+//                    .isTeacher(isTeacher)
+//                    .studentNumber(studentNumber)
+//                    .studentProfile(studentProfile)
+//                    .userId(userId)
+//                    .studentName(studentName)
+//                    .build();
+//
+//            userRepository.save(user);
         }
 
         return createToken(user);
@@ -225,7 +225,6 @@ public class UserService {
     public void serviceLogout(PrincipalDetails principalDetails){
         // 서비스 로그아웃
         OauthToken oauthToken = OauthTokenMap.getInstance().getOauthTokens().get(principalDetails.getUser().getUserId());
-        System.out.println(oauthToken);
 
         RestTemplate rt = new RestTemplate();
 
