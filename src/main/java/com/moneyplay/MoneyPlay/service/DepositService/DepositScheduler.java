@@ -5,6 +5,8 @@ import com.moneyplay.MoneyPlay.domain.Deposit;
 import com.moneyplay.MoneyPlay.domain.User;
 import com.moneyplay.MoneyPlay.repository.DepositRepository.DepositRepository;
 import com.moneyplay.MoneyPlay.repository.DepositRepository.DepositTypeRepository;
+
+import com.moneyplay.MoneyPlay.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -15,11 +17,14 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Component
+
 public class DepositScheduler {
 
     final DepositRepository depositRepository;
     final DepositTypeRepository depositTypeRepository;
+    final UserRepository userRepository;
 
+//
     @Scheduled(cron = "0 0 0 * * *")
 //@Scheduled(fixedRate = 5000) // 5초마다 실행
     public void Scheduler() {
@@ -59,6 +64,7 @@ public class DepositScheduler {
 
             // 만기일의 요일을 구한 후 같을 때
 
+
             if(startWeek == endWeek){
 
                 // 만기일 일 때 -> 이자 포함해서 사용자 자산 플러스 적금은 마이너스 해주고 해주고 삭제 / 만기일이 되면 기존 금액 * 이자율 추가 지급
@@ -67,24 +73,34 @@ public class DepositScheduler {
 
                     // 보유 금액 늘려주기 + 추가 이자 지급
 
-                    user.getPoint().setHoldingPoint(user.getPoint().getHoldingPoint()+deposits.get(i).getInterestAmount() + deposits.get(i).getDepositAmount()* deposits.get(i).getDepositType().getDepositInterestRate()/100);
+                    user.getPoint().setHoldingPoint(user.getPoint().getHoldingPoint()+ deposits.get(i).getDepositAmount()+ deposits.get(i).getInterestAmount() + deposits.get(i).getDepositAmount()* deposits.get(i).getDepositType().getDepositInterestRate()/100);
 
                     // 적금 금액 감소시키기
 
                     user.getPoint().setSavingPoint(user.getPoint().getSavingPoint()-deposits.get(i).getDepositAmount());
+
+                    userRepository.save(user);
+
                     depositRepository.delete(deposits.get(i));
                 }
 
                 // 만기일은 아닐 때 : 시작 날짜랑 오늘이 같지 않다면-> 이자 올려주기
 
                 else{
-                    if(startYear == todayYear && startMonth==todayMonth && startDay==todayDay){}
+                    if(startYear == todayYear && startMonth==todayMonth && startDay==todayDay){
+                        continue;
+                    }
                     else{
                         deposits.get(i).setInterestAmount(deposits.get(i).getInterestAmount() + deposits.get(i).getDepositAmount()*deposits.get(i).getDepositType().getDepositInterestRate()/100);
+
+                        depositRepository.save(deposits.get(i));
                     }
                 }
+
             }
+
         }
+
     }
 
 }
