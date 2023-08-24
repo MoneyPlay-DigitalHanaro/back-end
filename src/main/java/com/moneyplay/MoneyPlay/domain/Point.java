@@ -37,4 +37,8 @@ public class Point {
     @Setter
     @Column(nullable = false)
     private Long holdingPoint;
+
+    public void updateHoldingPoint(Long holdingPoint) {
+        this.holdingPoint = holdingPoint;
+    }
 }
