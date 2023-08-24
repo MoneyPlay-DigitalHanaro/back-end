@@ -16,10 +16,10 @@ public class CurrentStock {
 
     public CurrentStock() {}
 
-    public CurrentStock(User user, Corporation corporation, int averagePrice, int stockHoldingCount) {
+    public CurrentStock(User user, Corporation corporation, int totalPrice, int addPrice, int stockHoldingCount) {
         this.user = user;
         this.corporation = corporation;
-        this.averagePrice = averagePrice;
+        this.totalPrice = addPrice;
         this.stockHoldingCount = stockHoldingCount;
     }
     @Id
@@ -38,9 +38,15 @@ public class CurrentStock {
     private Corporation corporation;
 
     @Column(nullable = false)
-    private int averagePrice;
+    private int totalPrice;
 
     @Column(nullable = false)
     private int stockHoldingCount;
+
+
+    public void update(int addPrice, int addStockCount) {
+        this.totalPrice += addPrice;
+        this.stockHoldingCount += addStockCount;
+    }
 
 }

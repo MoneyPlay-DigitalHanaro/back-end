@@ -2,12 +2,10 @@ package com.moneyplay.MoneyPlay.service;
 
 import com.moneyplay.MoneyPlay.domain.*;
 import com.moneyplay.MoneyPlay.domain.dto.*;
-import com.moneyplay.MoneyPlay.repository.CorporationRepository;
-import com.moneyplay.MoneyPlay.repository.CurrentStockRepository;
-import com.moneyplay.MoneyPlay.repository.PointRepository;
-import com.moneyplay.MoneyPlay.repository.StockTradeHistoryRepository;
+import com.moneyplay.MoneyPlay.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -42,7 +40,11 @@ public class StockService {
     private final CurrentStockRepository currentStockRepository;
 
     private final PointRepository pointRepository;
+
+    private final UserRepository userRepository;
     ObjectMapper mapper;
+
+    // 한국 투자 증권 open api 토큰 발급
     public StockAPITokenDto getApiToken(){
         String totalUrl = "https://openapivts.koreainvestment.com:29443//oauth2/tokenP";
         String requestBody = "{\n" +
@@ -265,6 +267,7 @@ public class StockService {
         return null;
     }
 
+    // 모든 주식에 대한 정보를 반환
     public StockDataDto getStockData(String accessToken, String code) {
 
         System.out.println("======== 모든 주식 데이터 리스트를 반환하는 로직 start======");
@@ -400,6 +403,53 @@ public class StockService {
         return stockDataList;
     }
 
+    // 주식 리스트 페이지에서 내 주식 보유 현황에 대한 데이터를 만들어 반환
+    public MyStockInfoDto getMyStockInfo(Long userId, List<StockDataDto> stockDataList) {
+
+        // 유저 정보 조회
+        User user = userRepository.findByUserId(userId).orElseThrow(
+                () -> new NoSuchElementException("해당 유저에 대한 정보가 없습니다.")
+        );
+
+        // user 조회가 잘 되는지 체크해봐야함.
+        List<CurrentStock> currentStockList= currentStockRepository.findByUser(user).orElseGet(
+                () -> null
+        );
+
+        // 내가 가진 주식이 없다면 null 반환
+        if (currentStockList == null) {
+            return null;
+        }
+        int totalStockValue = 0;    // 총 주식 가치
+        int totalChangeStockValue = 0;   // 총 주식 평가손익
+        double totalChangeStockRate = 0;    // 수익률
+        int availablePoint = 0;     // 사용 가능한 포인트
+        int totalBuyStockPoint = 0;     // 총 주식 매수 포인트
+
+        for(int i = 0; i<currentStockList.size(); i++) {
+            int stockPresentValue = 0;
+            for (int j = 0; j<stockDataList.size(); j++) {
+                if (currentStockList.get(i).getCorporation().getCorporationName() == stockDataList.get(j).getName()) {
+                    stockPresentValue = Integer.parseInt(stockDataList.get(j).getStockPresentPrice());
+                    break;
+                }
+            }
+            totalStockValue += currentStockList.get(i).getStockHoldingCount()*stockPresentValue;
+            totalBuyStockPoint += currentStockList.get(i).getTotalPrice();
+        }
+        totalChangeStockValue = totalStockValue - totalBuyStockPoint;
+        totalChangeStockRate = (double)totalChangeStockValue/totalStockValue*100;
+
+        Point point = pointRepository.findByUser(user).orElseThrow(
+                () -> new NoSuchElementException("해당 유저의 포인트에 대한 정보가 없습니다.")
+        );
+        availablePoint = point.getHoldingPoint();
+
+        MyStockInfoDto myStockInfoDto = new MyStockInfoDto(totalStockValue, totalChangeStockValue, totalChangeStockRate, availablePoint, totalBuyStockPoint);
+
+        return myStockInfoDto;
+    }
+
     public void buyStock(User user, StockBuyDto stockBuyDto) {
 
         // 주식 회사 정보를 가져온다.
@@ -409,9 +459,21 @@ public class StockService {
         // 주식 거래 내역 테이블에 매수 내역 추가
         StockTradeHistory stockTradeHistory = new StockTradeHistory(user,corporation, stockBuyDto);
         stockTradeHistoryRepository.save(stockTradeHistory);
-        // 사용자의 현재 보유 주식 정보 추가
-        CurrentStock currentStock = new CurrentStock(user, corporation,stockBuyDto.getStockPresentPrice(), stockBuyDto.getBuyAmount());
-        currentStockRepository.save(currentStock);
+        // 이번에 구매한 주식의 총 가격
+        int addPrice = stockBuyDto.getStockPresentPrice()* stockBuyDto.getBuyAmount();
+        // 유저가 해당 주식을 구매한 적인 있는지 확인 (구매한 적 없다면 null이 반환)
+        CurrentStock currentStock = currentStockRepository.findByCorporationAndUser(corporation, user).orElseGet(
+                () -> null);
+        // 사용자의 현재 보유 주식 정보 추가 (해당 주식이 첫 구매일 때)
+        if (currentStock == null) {
+            CurrentStock addCurrentStock = new CurrentStock(user, corporation, stockBuyDto.getStockPresentPrice(), addPrice, stockBuyDto.getBuyAmount());
+            currentStockRepository.save(addCurrentStock);
+        }
+        // (해당 주식을 이전에 구매한 적이 있을 때)
+        else {
+            currentStock.update(addPrice, stockBuyDto.getBuyAmount());
+            currentStockRepository.save(currentStock);
+        }
         // 학생 포인트 테이블에서 보유한 포인트 현황 업데이트
         Point point = pointRepository.findByUser(user).orElseThrow(
                 () -> new NoSuchElementException("해당 유저에 대한 포인트 데이터가 없습니다.")
@@ -420,5 +482,10 @@ public class StockService {
         pointRepository.save(point);
     }
 
+    public void sellStock() {
+        // 주식 회사 정보를 가져온다.
+
+        //
+    }
 
 }

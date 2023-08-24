@@ -59,15 +59,28 @@ public class StockController {
 
     @ApiOperation(value = "모든 주식 회사 리스트 조회")
     @GetMapping
-    public ResponseEntity<?> stockAllDataList() {
+    public ResponseEntity<?> stockAllDataList(@RequestHeader("Authorization") String tokens) {
         try {
+            // 헤더에서 토큰을 가져온다.
+            String token =tokens.substring(7);
+            // 토큰값을 decode하여 id값을 가져온다.
+            DecodedJWT decodedJWT = JWT.decode(token);
+            Long userId = decodedJWT.getClaim("id").asLong();
+
             // 한국투자증권 open api 에서 접근 토큰 발급
             StockAPITokenDto stockAPITokenDto = stockService.getApiToken();
             System.out.println("API token 받아옴!");
 
+            // 유저의 보유 주식 관련 데이터와 한국투자증권 open api 에서 내가 지정한 모든 주식 리스트 정보 가져오기
             List<StockDataDto> stockDataList = stockService.getAllStockData(stockAPITokenDto.getAccessToken());
 
-            return new ResponseEntity<>(stockDataList, HttpStatus.OK);
+            // 주식 리스트 페이지의 내 주식 데이터를 표현하기 위한 dto (보유 주식이 없다면 null)
+            MyStockInfoDto myStockInfoDto = stockService.getMyStockInfo(userId, stockDataList);
+
+            // 유저의 보유 주식 데이터와 주식 데이터들을 합쳐 dto로 반환
+            StockListDto stockListDto = new StockListDto(myStockInfoDto, stockDataList);
+
+            return new ResponseEntity<>(stockListDto, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -102,6 +115,17 @@ public class StockController {
 
             return new ResponseEntity<>("매수 성공",HttpStatus.OK);
         } catch(Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @ApiOperation(value = "주식 매도")
+    @PostMapping()
+    public ResponseEntity<?> stockSell() {
+        try {
+
+            return new ResponseEntity<>("매도 성공", HttpStatus.OK);
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
