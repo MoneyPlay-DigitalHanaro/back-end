@@ -30,6 +30,7 @@ public class PointUpdateScheduler {
 //    @Scheduled(fixedRate = 5000) // 5초마다 실행
     public void Scheduler() {
 
+
         // ClassDailyPoint 업데이트
 
         List<ClassRoom> classRooms = classRoomRepository.findAll();
