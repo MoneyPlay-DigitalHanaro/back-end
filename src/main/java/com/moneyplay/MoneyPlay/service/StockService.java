@@ -429,7 +429,7 @@ public class StockService {
         for(int i = 0; i<currentStockList.size(); i++) {
             int stockPresentValue = 0;
             for (int j = 0; j<stockDataList.size(); j++) {
-                if (currentStockList.get(i).getCorporation().getCorporationName() == stockDataList.get(j).getName()) {
+                if (currentStockList.get(i).getCorporation().getCorporationName().equals(stockDataList.get(j).getName())) {
                     stockPresentValue = Integer.parseInt(stockDataList.get(j).getStockPresentPrice());
                     break;
                 }
@@ -438,7 +438,8 @@ public class StockService {
             totalBuyStockPoint += currentStockList.get(i).getTotalPrice();
         }
         totalChangeStockValue = totalStockValue - totalBuyStockPoint;
-        totalChangeStockRate = (double)totalChangeStockValue/totalStockValue*100;
+        System.out.println("총 주식의 가치 = " + totalStockValue + "  총 주식 구매 가격 = " + totalBuyStockPoint);
+        totalChangeStockRate = ((double)totalChangeStockValue/totalBuyStockPoint)*100;
 
         Point point = pointRepository.findByUser(user).orElseThrow(
                 () -> new NoSuchElementException("해당 유저의 포인트에 대한 정보가 없습니다.")
@@ -480,6 +481,8 @@ public class StockService {
         );
         point.updateHoldingPoint(point.getHoldingPoint() - (stockBuyDto.getStockPresentPrice()*stockBuyDto.getBuyAmount()));
         pointRepository.save(point);
+
+        System.out.println("매수 정보" + point);
     }
 
     public void sellStock() {
