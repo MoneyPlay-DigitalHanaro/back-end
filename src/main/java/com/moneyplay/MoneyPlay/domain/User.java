@@ -75,6 +75,9 @@ public class User {
         return new ArrayList<>();
     }
 
+    private Long TotalHoldingPoint;
 
-
+    public void setTotalHoldingPoint(Long totalHoldingPoint) {
+        TotalHoldingPoint = totalHoldingPoint;
+    }
 }

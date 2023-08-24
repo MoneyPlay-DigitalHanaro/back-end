@@ -26,8 +26,8 @@ public class PointUpdateScheduler {
 
     // 날짜 확인 후 자정에 스케쥴러 실행
 
-    @Scheduled(cron = "0 0 0 * * *")
-//@Scheduled(fixedRate = 5000) // 5초마다 실행
+//    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(fixedRate = 5000) // 5초마다 실행
     public void Scheduler() {
 
         // ClassDailyPoint 업데이트
@@ -67,6 +67,9 @@ public class PointUpdateScheduler {
 
             UserDailyPoint userDailyPoint = new UserDailyPoint(users.get(i),users.get(i).getClassRoom(),localDate,current_total);
 
+            users.get(i).setTotalHoldingPoint(current_total);
+
+            userRepository.save(users.get(i));
             userDailyPointRepository.save(userDailyPoint);
         }
     }
