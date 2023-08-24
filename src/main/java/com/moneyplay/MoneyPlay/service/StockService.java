@@ -423,7 +423,7 @@ public class StockService {
         int totalStockValue = 0;    // 총 주식 가치
         int totalChangeStockValue = 0;   // 총 주식 평가손익
         double totalChangeStockRate = 0;    // 수익률
-        int availablePoint = 0;     // 사용 가능한 포인트
+        Long availablePoint = 0L;     // 사용 가능한 포인트
         int totalBuyStockPoint = 0;     // 총 주식 매수 포인트
 
         for(int i = 0; i<currentStockList.size(); i++) {

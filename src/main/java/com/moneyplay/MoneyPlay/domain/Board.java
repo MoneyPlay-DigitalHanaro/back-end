@@ -31,7 +31,6 @@ public class Board {
     // 채팅 내용
     String message;
 
-
     public Board(User user, ClassRoom classRoom, String message) {
         this.user = user;
         this.classRoom = classRoom;

@@ -13,6 +13,7 @@ import javax.persistence.*;
 @Getter
 @Builder
 @AllArgsConstructor
+@Setter
 public class Point {
 
     public Point() {}
@@ -28,16 +29,16 @@ public class Point {
     private User user;
 
     @Column(nullable = false)
-    private int stockPoint;
+    private Long stockPoint;
 
     @Column(nullable = false)
-    private int savingPoint;
+    private Long savingPoint;
 
     @Setter
     @Column(nullable = false)
-    private int holdingPoint;
+    private Long holdingPoint;
 
-    public void updateHoldingPoint(int holdingPoint) {
+    public void updateHoldingPoint(Long holdingPoint) {
         this.holdingPoint = holdingPoint;
     }
 }

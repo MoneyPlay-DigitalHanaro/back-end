@@ -13,7 +13,7 @@ public class MyStockInfoDto {
 
     private double totalChangeStockRate;        // 내 주식 수익률
 
-    private int availablePoint;     // 사용 가능한 포인트
+    private Long availablePoint;     // 사용 가능한 포인트
 
     private int totalBuyStockPoint;      // 총 주식 매수 포인트
 }
