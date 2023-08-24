@@ -120,8 +120,8 @@ public class StockController {
     }
 
     @ApiOperation(value = "주식 매도")
-    @PostMapping()
-    public ResponseEntity<?> stockSell() {
+    @PostMapping("/sell")
+    public ResponseEntity<?> stockSell(@RequestHeader("Authorization") String tokens, @Validated @RequestBody StockBuyDto stockBuyDto) {
         try {
 
             return new ResponseEntity<>("매도 성공", HttpStatus.OK);
