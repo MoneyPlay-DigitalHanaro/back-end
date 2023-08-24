@@ -26,8 +26,9 @@ public class PointUpdateScheduler {
 
     // 날짜 확인 후 자정에 스케쥴러 실행
 
+
+    //@Scheduled(fixedRate = 5000) // 5초마다 실행
     @Scheduled(cron = "0 0 0 * * *")
-//    @Scheduled(fixedRate = 5000) // 5초마다 실행
     public void Scheduler() {
 
 
