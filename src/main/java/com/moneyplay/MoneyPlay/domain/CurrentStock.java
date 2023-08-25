@@ -44,9 +44,13 @@ public class CurrentStock {
     private int stockHoldingCount;
 
 
-    public void update(int addPrice, int addStockCount) {
+    public void buyUpdate(int addPrice, int buyStockCount) {
         this.totalPrice += addPrice;
-        this.stockHoldingCount += addStockCount;
+        this.stockHoldingCount += buyStockCount;
+    }
+    public void sellUpdate(int sellStockCount) {
+        this.totalPrice -= this.totalPrice/this.stockHoldingCount * sellStockCount;
+        this.stockHoldingCount -= sellStockCount;
     }
 
 }
