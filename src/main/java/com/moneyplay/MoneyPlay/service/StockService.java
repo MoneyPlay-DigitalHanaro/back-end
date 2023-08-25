@@ -472,23 +472,57 @@ public class StockService {
         }
         // (해당 주식을 이전에 구매한 적이 있을 때)
         else {
-            currentStock.update(addPrice, stockBuyDto.getBuyAmount());
+            currentStock.buyUpdate(addPrice, stockBuyDto.getBuyAmount());
             currentStockRepository.save(currentStock);
         }
         // 학생 포인트 테이블에서 보유한 포인트 현황 업데이트
         Point point = pointRepository.findByUser(user).orElseThrow(
                 () -> new NoSuchElementException("해당 유저에 대한 포인트 데이터가 없습니다.")
         );
-        point.updateHoldingPoint(point.getHoldingPoint() - (stockBuyDto.getStockPresentPrice()*stockBuyDto.getBuyAmount()));
+        point.updateHoldingPoint(point.getHoldingPoint() - addPrice);
         pointRepository.save(point);
 
         System.out.println("매수 정보" + point);
     }
 
-    public void sellStock() {
+    public String sellStock(User user, StockSellDto stockSellDto) {
         // 주식 회사 정보를 가져온다.
+        Corporation corporation = corporationRepository.findByCorporationName(stockSellDto.getName()).orElseThrow(
+                () -> new NoSuchElementException("해당 주식에 대한 정보가 없습니다.")
+        );
+        // 이번에 매도한 주식의 총 가격
+        int addPrice = stockSellDto.getStockPresentPrice()* stockSellDto.getSellAmount();
+        // 유저가 보유한 해당 주식 정보 가져오기
+        CurrentStock currentStock = currentStockRepository.findByCorporationAndUser(corporation, user).orElseGet(
+                () -> null);
+        if (currentStock == null) {
+            return "보유 주식 없음";
+        }
+        // 파는 주식의 개수가 보유한 주식의 개수보다 크면 return "매도개수초과"
+        if (currentStock.getStockHoldingCount() < stockSellDto.getSellAmount()) {
+            return "매도 개수 초과";
+        }
+        // 매도에 성공했을 경우
+        // 주식 거래 내역 테이블에 매도 내역 추가
+        StockTradeHistory stockTradeHistory = new StockTradeHistory(user,corporation, stockSellDto);
+        stockTradeHistoryRepository.save(stockTradeHistory);
+        // 주식 매도 개수가 주식 보유 개수와 같을때, 해당 주식 보유 정보 삭제
+        if (currentStock.getStockHoldingCount() == stockSellDto.getSellAmount()) {
+            currentStockRepository.delete(currentStock);
+        }
+        // 주식 매도 개수가 주식 보유 개수보다 적을때, 해당 주식 보유 정보 업데이트
+        else {
+            currentStock.sellUpdate(stockSellDto.getSellAmount());
+            currentStockRepository.save(currentStock);
+        }
+        // 학생 포인트 테이블에서 보유한 포인트 현황 업데이트
+        Point point = pointRepository.findByUser(user).orElseThrow(
+                () -> new NoSuchElementException("해당 유저에 대한 포인트 데이터가 없습니다.")
+        );
+        point.updateHoldingPoint(point.getHoldingPoint() + addPrice);
+        pointRepository.save(point);
 
-        //
+        return "매도 성공";
     }
 
 }
