@@ -8,11 +8,11 @@ import com.moneyplay.MoneyPlay.domain.User;
 import com.moneyplay.MoneyPlay.repository.DepositRepository.DepositRepository;
 import com.moneyplay.MoneyPlay.repository.DepositRepository.DepositTypeRepository;
 import com.moneyplay.MoneyPlay.repository.UserRepository;
-import com.moneyplay.MoneyPlay.service.DepositService.DepositScheduler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 
@@ -37,17 +37,9 @@ public class DepositController {
 
     // 특정 예금 정보 return
 
-<<<<<<< HEAD
-    @GetMapping("savings/join")
-    public DepositType depositGets(@PathVariable Long index) {
+    @GetMapping("savings/join/")
+    public DepositType depositGet(@RequestParam Long index) {
 
-=======
-
-    @GetMapping("savings/join")
-    public DepositType depositGets(@PathVariable Long index) {
-
-
->>>>>>> 2cb0b217af17f974eb139ae20386eeffc32062c4
         // 적금 종류를 return 해주기
 
         return depositTypeRepository.findByDepositTypeId(index);
@@ -55,9 +47,11 @@ public class DepositController {
 
 
     @PostMapping("game/deposit")
-    public void depositPost(@RequestHeader("Authorization") String tokens) {
+    public List<Deposit> depositPost(@RequestHeader("Authorization") String tokens,
+                                     @RequestParam Long increase_money,
+                                     @RequestParam Long depositId,
+                                     @RequestParam Long week ) {
 
-        // 적금을 선택해서 시작함
 
         // 적금 종류, 만기일 필요
 
@@ -65,36 +59,28 @@ public class DepositController {
 
         DecodedJWT decodedJWT = JWT.decode(token);
         Long id = decodedJWT.getClaim("id").asLong();
-
-        // 고른 적금은 3L 이라고 가정
-
-        // 적금 객체 생성
-        DepositType depositType = new DepositType();
-        depositType.setDepositTypeId(3L);
-        depositType.setDepositName("훈이");
-        depositType.setDepositInterestRate(4L);
-
         User user = userRepository.findByuserId(id);
 
-        // 오늘 날짜가 28일 이상이면 다음 달 1일 시작으로 해주기
+        // 예금양, 시작일, 종료일, 이자율, 이자 금액, 유저 고유 아이디, 에금 고유 아이디 로 에금 생성
 
         LocalDate currentDate = LocalDate.now();
 
-        int todayYear = currentDate.getYear();
-        int todayMonth = currentDate.getMonthValue();
-        int todayDay = currentDate.getDayOfMonth();
-
-        // 적금 생성
-
         Deposit deposit = new Deposit();
-        deposit.setDepositType(depositType); // 적금 종류 선택
-        deposit.setUser(user); // 유저 설정
-        deposit.setDepositAmount(10000L); // 적금 금액
-        deposit.setEndDate(LocalDate.of(2023, 10, 5)); // 임의로 만기일 설정
+        deposit.setUser(user);
+        deposit.setDepositId(depositId);
+        deposit.setStartDate(currentDate);
+        deposit.setEndDate(currentDate.plus(week, ChronoUnit.WEEKS));
         deposit.setInterestAmount(0L);
-        deposit.setStartDate(LocalDate.of(todayYear,todayMonth,todayDay));
+        deposit.setDepositAmount(increase_money);
 
         depositRepository.save(deposit);
 
+        // 사용자 holding point 줄이기
+
+        user.getPoint().setHoldingPoint(user.getPoint().getHoldingPoint() - increase_money);
+        user.getPoint().setSavingPoint(user.getPoint().getSavingPoint() + increase_money);
+        userRepository.save(user);
+
+        return depositRepository.findAll();
     }
 }
