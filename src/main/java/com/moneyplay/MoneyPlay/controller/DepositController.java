@@ -37,9 +37,17 @@ public class DepositController {
 
     // 특정 예금 정보 return
 
+<<<<<<< HEAD
     @GetMapping("savings/join")
     public DepositType depositGets(@PathVariable Long index) {
 
+=======
+
+    @GetMapping("savings/join")
+    public DepositType depositGets(@PathVariable Long index) {
+
+
+>>>>>>> 2cb0b217af17f974eb139ae20386eeffc32062c4
         // 적금 종류를 return 해주기
 
         return depositTypeRepository.findByDepositTypeId(index);
