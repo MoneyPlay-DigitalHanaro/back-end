@@ -10,10 +10,7 @@ import com.moneyplay.MoneyPlay.repository.DepositRepository.DepositTypeRepositor
 import com.moneyplay.MoneyPlay.repository.UserRepository;
 import com.moneyplay.MoneyPlay.service.DepositService.DepositScheduler;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,12 +24,25 @@ public class DepositController {
     final DepositTypeRepository depositTypeRepository;
     final UserRepository userRepository;
 
+    // 전체 적금 종류 return
+
     @GetMapping("game/deposit")
     public List<DepositType> depositGet() {
 
         // 적금 종류를 return 해주기
 
         return depositTypeRepository.findAll();
+    }
+
+
+    // 특정 예금 정보 return
+
+    @GetMapping("savings/join/")
+    public DepositType depositGet(@RequestParam Long index) {
+
+        // 적금 종류를 return 해주기
+
+        return depositTypeRepository.findByDepositTypeId(index);
     }
 
 

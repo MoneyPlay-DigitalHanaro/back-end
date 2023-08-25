@@ -80,4 +80,5 @@ public class User {
     public void setTotalHoldingPoint(Long totalHoldingPoint) {
         TotalHoldingPoint = totalHoldingPoint;
     }
+
 }
