@@ -12,7 +12,7 @@ public class DepositType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long DepositTypeId;
+    private Long depositTypeId;
 
     private String DepositName;
 

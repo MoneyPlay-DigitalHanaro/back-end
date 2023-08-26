@@ -1,6 +1,7 @@
 package com.moneyplay.MoneyPlay.domain;
 
 import com.moneyplay.MoneyPlay.domain.dto.StockBuyDto;
+import com.moneyplay.MoneyPlay.domain.dto.StockSellDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,6 +27,16 @@ public class StockTradeHistory {
         this.tradeType = stockBuyDto.getTradeType();
         this.tradeDate = LocalDateTime.now();
     }
+
+    public StockTradeHistory(User user, Corporation corporation, StockSellDto stockSellDto) {
+        this.user = user;
+        this.corporation = corporation;
+        this.stockSoldPoint = stockSellDto.getStockPresentPrice();
+        this.stockSoldCount = stockSellDto.getSellAmount();
+        this.tradeType = stockSellDto.getTradeType();
+        this.tradeDate = LocalDateTime.now();
+    }
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
