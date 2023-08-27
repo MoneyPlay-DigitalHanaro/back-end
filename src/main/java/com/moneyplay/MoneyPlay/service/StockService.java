@@ -267,7 +267,7 @@ public class StockService {
         return null;
     }
 
-    // 모든 주식에 대한 정보를 반환
+    // 해당 주식에 대한 정보를 반환
     public StockDataDto getStockData(String accessToken, String code) {
 
         System.out.println("======== 모든 주식 데이터 리스트를 반환하는 로직 start======");
@@ -392,6 +392,7 @@ public class StockService {
         return null;
     }
 
+    // 모든 주식에 대한 정보를 반환
     public List<StockDataDto> getAllStockData(String accessToken) {
         List<StockDataDto> stockDataList = new ArrayList<>();
         List<Corporation> corporations = corporationRepository.findAll();
