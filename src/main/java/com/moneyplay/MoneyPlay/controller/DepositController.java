@@ -53,7 +53,8 @@ public class DepositController {
                                      @RequestBody DepositRequest depositRequest) {
 
         Long increase_money = depositRequest.getIncrease_money();
-        Long depositId = depositRequest.getDepositId();
+//        Long depositId = depositRequest.getDepositId();
+        Long depositId = 1L;
         Long week = depositRequest.getWeek();
         // 적금 종류, 만기일 필요
 

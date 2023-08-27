@@ -10,5 +10,4 @@ public class DepositRequest {
     private Long depositId;
     private Long week;
 
-    // getters, setters, constructors 등이 필요합니다...
 }
