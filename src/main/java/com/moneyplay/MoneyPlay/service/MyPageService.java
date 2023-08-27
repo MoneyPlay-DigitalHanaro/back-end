@@ -92,22 +92,4 @@ public class MyPageService {
         return myStockDtoList;
     }
 
-    public List<CurrentStock> findUserCurrentStock(Long userId) {
-        User user = userRepository.findByUserId(userId).orElseThrow(
-                () -> new NoSuchElementException("존재하지 않는 유저 정보입니다.")
-        );
-        List<CurrentStock> currentStockList = currentStockRepository.findByUser(user).orElseThrow(
-                null
-        );
-
-        return currentStockList;
-    }
-
-    public Long getTotalStockValue(List<MyStockDto> myStockDtoList) {
-        Long totalStockValue = 0L;
-        for (int i = 0; i<myStockDtoList.size(); i++) {
-            totalStockValue += myStockDtoList.get(i).getTotalStockValue();
-        }
-        return totalStockValue;
-    }
 }

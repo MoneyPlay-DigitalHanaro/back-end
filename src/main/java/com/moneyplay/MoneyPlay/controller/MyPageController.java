@@ -4,9 +4,11 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.moneyplay.MoneyPlay.domain.CurrentStock;
 import com.moneyplay.MoneyPlay.domain.Deposit;
+import com.moneyplay.MoneyPlay.domain.User;
 import com.moneyplay.MoneyPlay.domain.dto.*;
 import com.moneyplay.MoneyPlay.repository.CurrentStockRepository;
 import com.moneyplay.MoneyPlay.repository.DepositRepository.DepositRepository;
+import com.moneyplay.MoneyPlay.repository.UserRepository;
 import com.moneyplay.MoneyPlay.service.MyPageService;
 import com.moneyplay.MoneyPlay.service.StockService;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +32,7 @@ public class MyPageController {
     private final StockService stockService;
     private final CurrentStockRepository currentStockRepository;
     private final DepositRepository depositRepository;
+    private final UserRepository userRepository;
 
     @ApiOperation(value = "마이페이지 클릭 시 내 주식 상세 정보")
     @GetMapping
@@ -49,8 +52,11 @@ public class MyPageController {
             DecodedJWT decodedJWT = JWT.decode(token);
             Long userId = decodedJWT.getClaim("id").asLong();
 
+
+            User user = userRepository.findByuserId(userId);
+
             // 유저의 보유 주식 정보를 가져온다. (보유 주식이 없으면 null)
-            List<CurrentStock> currentStockList = currentStockRepository.findByUserId(userId).orElseThrow(null);
+            List<CurrentStock> currentStockList = currentStockRepository.findByUser(user).orElseThrow(null);
             // 한국투자증권 open api 에서 접근 토큰 발급
             StockAPITokenDto stockAPITokenDto = stockService.getApiToken();
             System.out.println("API token 받아옴!");
@@ -74,7 +80,7 @@ public class MyPageController {
             }
 
             // 유저의 적금 정보를 가져온다.
-            Deposit deposit = depositRepository.findByUserId(userId).orElseThrow(null);
+            Deposit deposit = depositRepository.findByUser(user).orElseThrow(null);
             if (deposit != null) {
                 myDepositDto = new MyDepositDto(deposit);
             }
