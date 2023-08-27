@@ -1,6 +1,7 @@
 package com.moneyplay.MoneyPlay.service;
 
 import com.moneyplay.MoneyPlay.domain.CurrentStock;
+import com.moneyplay.MoneyPlay.domain.Point;
 import com.moneyplay.MoneyPlay.domain.User;
 import com.moneyplay.MoneyPlay.domain.dto.MyDepositDto;
 import com.moneyplay.MoneyPlay.domain.dto.MyPointDto;
@@ -22,16 +23,11 @@ import java.util.NoSuchElementException;
 @Transactional
 public class MyPageService {
 
-    private final UserRepository userRepository;
-
     private final PointRepository pointRepository;
 
     private final CurrentStockRepository currentStockRepository;
 
-    public MyPointDto findUserPoint(Long userId, List<MyStockDto> myStockDtoList, MyDepositDto myDepositDto) {
-        User user = userRepository.findByUserId(userId).orElseThrow(
-                () -> new NoSuchElementException("존재하지 않는 유저 정보 입니다.")
-        );
+    public MyPointDto findUserPoint(User user, List<MyStockDto> myStockDtoList, MyDepositDto myDepositDto) {
 
         // 유저의 포인트 정보
         Long totalPoint;     // 총 포인트 가치
@@ -61,15 +57,17 @@ public class MyPageService {
         else
             totalDepositPoint = 0L;
 
+        // 유저의 총 주식 가치 포인트 저장
+        saveUserStockPoint(user ,totalStockPoint);
+        // 유저의 총 예금 가치 포인트 저장
+        saveUserDepositPoint(user, totalDepositPoint);
+
         MyPointDto myPointDto = new MyPointDto(totalPoint, changePointValue, changePointRate,availablePoint,totalStockPoint, totalDepositPoint);
 
         return myPointDto;
     }
 
-    public List<MyStockDto> findUserStock(Long userId, List<CurrentStock> currentStockList, List<StockDataDto> userStockDataList) {
-        User user = userRepository.findByUserId(userId).orElseThrow(
-                () -> new NoSuchElementException("존재하지 않는 유저 정보입니다.")
-        );
+    public List<MyStockDto> findUserStock(User user, List<CurrentStock> currentStockList, List<StockDataDto> userStockDataList) {
 
         // MyStockDto
         String name;                // 주식 이름
@@ -95,7 +93,27 @@ public class MyPageService {
             myStockDtoList.add(myStockDto);
         }
 
+
+
         return myStockDtoList;
+    }
+
+    public void saveUserStockPoint(User user, Long totalStockPoint) {
+        Point point = pointRepository.findByUser(user).orElseThrow(
+                () -> new NoSuchElementException("해당 유저의 포인트 정보가 존재하지 않습니다.")
+        );
+
+        point.updateStockPoint(totalStockPoint);
+        pointRepository.save(point);
+    }
+
+    public void saveUserDepositPoint(User user, Long totalDepositPoint) {
+        Point point = pointRepository.findByUser(user).orElseThrow(
+                () -> new NoSuchElementException("해당 유저의 포인트 정보가 존재하지 않습니다.")
+        );
+
+        point.updateDepositPoint(totalDepositPoint);
+        pointRepository.save(point);
     }
 
 }

@@ -24,15 +24,15 @@ public class MyDepositDto {
         this.week = deposit.getWeek();
     }
 
-    private Long DepositAmount;
+    private Long DepositAmount;     // 예금 총 금액
 
-    private Long InterestAmount;
+    private Long InterestAmount;    // 예금 총 이자
 
-    private LocalDate StartDate;
+    private LocalDate StartDate;    // 예금 시작일
 
-    private LocalDate EndDate;
+    private LocalDate EndDate;      // 예금 종료일
 
-    private DepositType depositType;
+    private DepositType depositType;    // 예금 종류
 
-    private Long week;
+    private Long week;      // 예금 기간 (주 단위)
 }
