@@ -3,6 +3,7 @@ package com.moneyplay.MoneyPlay.controller;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.moneyplay.MoneyPlay.domain.Deposit;
+import com.moneyplay.MoneyPlay.domain.DepositRequest;
 import com.moneyplay.MoneyPlay.domain.DepositType;
 import com.moneyplay.MoneyPlay.domain.User;
 import com.moneyplay.MoneyPlay.repository.DepositRepository.DepositRepository;
@@ -49,11 +50,12 @@ public class DepositController {
 
     @PostMapping("game/deposit")
     public List<Deposit> depositPost(@RequestHeader("Authorization") String tokens,
-                                     @RequestParam Long increase_money,
-                                     @RequestParam Long depositId,
-                                     @RequestParam Long week ) {
+                                     @RequestBody DepositRequest depositRequest) {
 
-
+        Long increase_money = depositRequest.getIncrease_money();
+//        Long depositId = depositRequest.getDepositId();
+        Long depositId = 1L;
+        Long week = depositRequest.getWeek();
         // 적금 종류, 만기일 필요
 
         String token = tokens.substring(7);
