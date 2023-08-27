@@ -37,11 +37,12 @@ public class DepositController {
 
     // 특정 예금 정보 return
 
-    @GetMapping("savings/join/")
+    @GetMapping("savings/join")
     public DepositType depositGet(@RequestParam Long index) {
 
         // 적금 종류를 return 해주기
 
+        //
         return depositTypeRepository.findByDepositTypeId(index);
     }
 
@@ -61,7 +62,7 @@ public class DepositController {
         Long id = decodedJWT.getClaim("id").asLong();
         User user = userRepository.findByuserId(id);
 
-        // 예금양, 시작일, 종료일, 이자율, 이자 금액, 유저 고유 아이디, 에금 고유 아이디 로 에금 생성
+        // 예금양, 시작일, 종료일, 이자율, 이자 금액, 유저 고유 아이디, 에금 고유 아이디, 주 로 에금 생성
 
         LocalDate currentDate = LocalDate.now();
 
@@ -72,6 +73,7 @@ public class DepositController {
         deposit.setEndDate(currentDate.plus(week, ChronoUnit.WEEKS));
         deposit.setInterestAmount(0L);
         deposit.setDepositAmount(increase_money);
+        deposit.setWeek(week);
 
         depositRepository.save(deposit);
 
