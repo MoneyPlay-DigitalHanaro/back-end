@@ -80,7 +80,7 @@ public class MyPageController {
 
 
                 // 유저의 주식 정보를 myPage 표현 양식에 맞게 가져온다.
-                myStockDtoList = myPageService.findUserStock(userId, currentStockList, userStockDataList);
+                myStockDtoList = myPageService.findUserStock(user, currentStockList, userStockDataList);
                 System.out.println("!!유저의 주식 수= " + myStockDtoList.size());
             }
 
@@ -97,7 +97,7 @@ public class MyPageController {
 
             System.out.println("예금 Dto 정보= "+ myDepositDto);
             // 유저의 포인트 정보를 가져온다.
-            myPointDto = myPageService.findUserPoint(userId, myStockDtoList, myDepositDto);
+            myPointDto = myPageService.findUserPoint(user, myStockDtoList, myDepositDto);
 
             System.out.println("유저의 포인트 총합= " + myPointDto.getTotalPoint());
 
@@ -108,6 +108,10 @@ public class MyPageController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    //@ApiOperation(value = "마이페이지 클릭 시 내 주식 상세 정보")
+    //@GetMapping
+    //public ResponseEntity<?> myPageStockDetail()
 
 
 }

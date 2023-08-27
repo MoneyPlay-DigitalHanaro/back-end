@@ -28,10 +28,7 @@ public class MyPageService {
 
     private final CurrentStockRepository currentStockRepository;
 
-    public MyPointDto findUserPoint(Long userId, List<MyStockDto> myStockDtoList, MyDepositDto myDepositDto) {
-        User user = userRepository.findByUserId(userId).orElseThrow(
-                () -> new NoSuchElementException("존재하지 않는 유저 정보 입니다.")
-        );
+    public MyPointDto findUserPoint(User user, List<MyStockDto> myStockDtoList, MyDepositDto myDepositDto) {
 
         // 유저의 포인트 정보
         Long totalPoint;     // 총 포인트 가치
@@ -45,6 +42,7 @@ public class MyPageService {
             changePointValue += myStockDtoList.get(i).getChangeStockValue();
             totalStockPoint += myStockDtoList.get(i).getTotalStockValue();
         }
+        //saveUserStockPoint(user ,totalStockPoint);
 
         System.out.println("수익 포인트= " + changePointValue + "  총 주식 포인트= " + totalStockPoint);
 
@@ -66,10 +64,7 @@ public class MyPageService {
         return myPointDto;
     }
 
-    public List<MyStockDto> findUserStock(Long userId, List<CurrentStock> currentStockList, List<StockDataDto> userStockDataList) {
-        User user = userRepository.findByUserId(userId).orElseThrow(
-                () -> new NoSuchElementException("존재하지 않는 유저 정보입니다.")
-        );
+    public List<MyStockDto> findUserStock(User user, List<CurrentStock> currentStockList, List<StockDataDto> userStockDataList) {
 
         // MyStockDto
         String name;                // 주식 이름
@@ -94,6 +89,8 @@ public class MyPageService {
 
             myStockDtoList.add(myStockDto);
         }
+
+
 
         return myStockDtoList;
     }
