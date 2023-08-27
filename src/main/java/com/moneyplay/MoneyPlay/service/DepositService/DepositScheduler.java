@@ -75,7 +75,7 @@ public class DepositScheduler {
 
                             user.getPoint().getHoldingPoint()+
                             deposits.get(i).getDepositAmount()+
-                            deposits.get(i).getDepositAmount()*(0.5+deposits.get(i).getWeek()*0.1)/100
+                            deposits.get(i).getDepositAmount()*(0.5+(deposits.get(i).getWeek()-4)*0.1)/100
                     ));
 
                     // 적금 금액 감소시키기
