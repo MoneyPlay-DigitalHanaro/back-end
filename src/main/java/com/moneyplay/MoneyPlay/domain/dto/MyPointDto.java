@@ -7,9 +7,9 @@ import lombok.Data;
 @AllArgsConstructor
 public class MyPointDto {
 
-    private int totalPoint;     // 총 포인트 가치
+    private Long totalPoint;     // 총 포인트 가치
 
-    private int changePointValue;       // 수익 금액
+    private Long changePointValue;       // 수익 금액
 
     private double changePointRate;     // 수익률
 

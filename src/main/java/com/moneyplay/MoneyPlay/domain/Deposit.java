@@ -30,5 +30,7 @@ public class Deposit {
     @JoinColumn(name = "deposit_type_id")
     private DepositType depositType;
 
+    private Long week;
+
 
 }

@@ -2,6 +2,7 @@ package com.moneyplay.MoneyPlay.service;
 
 import com.moneyplay.MoneyPlay.domain.CurrentStock;
 import com.moneyplay.MoneyPlay.domain.User;
+import com.moneyplay.MoneyPlay.domain.dto.MyDepositDto;
 import com.moneyplay.MoneyPlay.domain.dto.MyPointDto;
 import com.moneyplay.MoneyPlay.domain.dto.MyStockDto;
 import com.moneyplay.MoneyPlay.domain.dto.StockDataDto;
@@ -27,21 +28,34 @@ public class MyPageService {
 
     private final CurrentStockRepository currentStockRepository;
 
-    public MyPointDto findUserPoint(Long userId, Long ) {
+    public MyPointDto findUserPoint(Long userId, List<MyStockDto> myStockDtoList, MyDepositDto myDepositDto) {
         User user = userRepository.findByUserId(userId).orElseThrow(
                 () -> new NoSuchElementException("존재하지 않는 유저 정보 입니다.")
         );
 
         // 유저의 포인트 정보
-        int totalPoint;     // 총 포인트 가치
-        int changePointValue;       // 수익 금액
+        Long totalPoint;     // 총 포인트 가치
+        Long changePointValue = 0L;       // 수익 금액
         double changePointRate;     // 수익률
         Long availablePoint;     // 사용가능한 포인트
-        Long totalStockPoint;       // 총 주식 포인트
-        Long totalDepositPoint;  //총 적금 포인트
+        Long totalStockPoint = 0L;       // 총 주식 포인트
+        Long totalDepositPoint = 0L;  //총 적금 포인트
 
+        for (int i = 0; i<myStockDtoList.size(); i++) {
+            changePointValue += myStockDtoList.get(i).getChangeStockValue();
+            totalStockPoint += myStockDtoList.get(i).getTotalStockValue();
+        }
+
+        if (myDepositDto != null)
+            myDepositDto.getDepositAmount();
+
+        totalPoint = totalDepositPoint + totalStockPoint;
+        changePointValue += myDepositDto.getInterestAmount();
+        changePointRate = ((double)changePointValue/totalPoint)*100;
         availablePoint = user.getPoint().getHoldingPoint();
-        MyPointDto myPointDto = new MyPointDto(,,availablePoint,);
+        totalDepositPoint = myDepositDto.getDepositAmount() + myDepositDto.getInterestAmount();
+
+        MyPointDto myPointDto = new MyPointDto(totalPoint, changePointValue, changePointRate,availablePoint,totalStockPoint, totalDepositPoint);
 
         return myPointDto;
     }
@@ -87,5 +101,13 @@ public class MyPageService {
         );
 
         return currentStockList;
+    }
+
+    public Long getTotalStockValue(List<MyStockDto> myStockDtoList) {
+        Long totalStockValue = 0L;
+        for (int i = 0; i<myStockDtoList.size(); i++) {
+            totalStockValue += myStockDtoList.get(i).getTotalStockValue();
+        }
+        return totalStockValue;
     }
 }

@@ -3,8 +3,10 @@ package com.moneyplay.MoneyPlay.controller;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.moneyplay.MoneyPlay.domain.CurrentStock;
+import com.moneyplay.MoneyPlay.domain.Deposit;
 import com.moneyplay.MoneyPlay.domain.dto.*;
 import com.moneyplay.MoneyPlay.repository.CurrentStockRepository;
+import com.moneyplay.MoneyPlay.repository.DepositRepository.DepositRepository;
 import com.moneyplay.MoneyPlay.service.MyPageService;
 import com.moneyplay.MoneyPlay.service.StockService;
 import io.swagger.annotations.ApiOperation;
@@ -27,11 +29,20 @@ public class MyPageController {
     private final MyPageService myPageService;
     private final StockService stockService;
     private final CurrentStockRepository currentStockRepository;
+    private final DepositRepository depositRepository;
 
     @ApiOperation(value = "마이페이지 클릭 시 내 주식 상세 정보")
     @GetMapping
     public ResponseEntity<?> myPageStockDetail(@RequestHeader("Authorization") String tokens) {
         try {
+            // 유저가 가지고 있는 주식에 대한 데이터 리스트
+            List<MyStockDto> myStockDtoList = null;
+            // 유저가 가지고 있는 예금에 대한 데이터
+            MyDepositDto myDepositDto = null;
+            // 유저의 포인트 상세 데이터
+            MyPointDto myPointDto = null;
+
+
             // 헤더에서 토큰을 가져온다.
             String token =tokens.substring(7);
             // 토큰값을 decode하여 id값을 가져온다.
@@ -47,8 +58,7 @@ public class MyPageController {
             // 유저의 보유 주식 관련 데이터와 한국투자증권 open api 에서 내가 지정한 모든 주식 리스트 정보 가져오기
             List<StockDataDto> userStockDataList = new ArrayList<>();
 
-            // 유저가 가지고 있는 주식에 대한 데이터 리스트
-            List<MyStockDto> myStockDtoList;
+
             if (currentStockList == null) {
                 userStockDataList = null;
                 myStockDtoList = null;
@@ -62,10 +72,14 @@ public class MyPageController {
                 // 유저의 주식 정보를 myPage 표현 양식에 맞게 가져온다.
                 myStockDtoList = myPageService.findUserStock(userId, currentStockList, userStockDataList);
             }
-            // 유저의 적금 정보를 가져온다.
 
+            // 유저의 적금 정보를 가져온다.
+            Deposit deposit = depositRepository.findByUserId(userId).orElseThrow(null);
+            if (deposit != null) {
+                myDepositDto = new MyDepositDto(deposit);
+            }
             // 유저의 포인트 정보를 가져온다.
-            MyPointDto myPointDto = myPageService.findUserPoint(userId, );
+            myPointDto = myPageService.findUserPoint(userId, myStockDtoList, myDepositDto);
 
 
             // 유저의 포인트 정보와 주식 정보를 모아 리턴한다.
@@ -75,4 +89,6 @@ public class MyPageController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+
 }
