@@ -38,6 +38,8 @@ public class MyPageController {
     @GetMapping
     public ResponseEntity<?> myPageStockDetail(@RequestHeader("Authorization") String tokens) {
         try {
+
+            System.out.println("============= 마이페이지 첫 화면 =============");
             // 유저가 가지고 있는 주식에 대한 데이터 리스트
             List<MyStockDto> myStockDtoList = null;
             // 유저가 가지고 있는 예금에 대한 데이터
@@ -54,6 +56,8 @@ public class MyPageController {
 
 
             User user = userRepository.findByuserId(userId);
+
+            System.out.println("User 정보 가져옴. User = " + user.getStudentName());
 
             // 유저의 보유 주식 정보를 가져온다. (보유 주식이 없으면 null)
             List<CurrentStock> currentStockList = currentStockRepository.findByUser(user).orElseThrow(null);
@@ -77,16 +81,25 @@ public class MyPageController {
 
                 // 유저의 주식 정보를 myPage 표현 양식에 맞게 가져온다.
                 myStockDtoList = myPageService.findUserStock(userId, currentStockList, userStockDataList);
+                System.out.println("!!유저의 주식 수= " + myStockDtoList.size());
             }
 
             // 유저의 적금 정보를 가져온다.
-            Deposit deposit = depositRepository.findByUser(user).orElseThrow(null);
+            Deposit deposit = depositRepository.findByUser(user).orElse(null);
+            System.out.println("!!예금=  " + deposit);
             if (deposit != null) {
                 myDepositDto = new MyDepositDto(deposit);
+                System.out.println("적금 이름= " + myDepositDto.getDepositType().getDepositName());
             }
+            else {
+                System.out.println("예금 정보= "+ deposit);
+            }
+
+            System.out.println("예금 Dto 정보= "+ myDepositDto);
             // 유저의 포인트 정보를 가져온다.
             myPointDto = myPageService.findUserPoint(userId, myStockDtoList, myDepositDto);
 
+            System.out.println("유저의 포인트 총합= " + myPointDto.getTotalPoint());
 
             // 유저의 포인트 정보와 주식 정보를 모아 리턴한다.
             MyPageMyPoiintAndStockDto myPageMyPoiintAndStockDto = new MyPageMyPoiintAndStockDto(myPointDto,myStockDtoList);
