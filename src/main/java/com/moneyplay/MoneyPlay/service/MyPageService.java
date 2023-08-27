@@ -46,14 +46,20 @@ public class MyPageService {
             totalStockPoint += myStockDtoList.get(i).getTotalStockValue();
         }
 
+        System.out.println("수익 포인트= " + changePointValue + "  총 주식 포인트= " + totalStockPoint);
+
         if (myDepositDto != null)
             myDepositDto.getDepositAmount();
 
         totalPoint = totalDepositPoint + totalStockPoint;
-        changePointValue += myDepositDto.getInterestAmount();
         changePointRate = ((double)changePointValue/totalPoint)*100;
         availablePoint = user.getPoint().getHoldingPoint();
-        totalDepositPoint = myDepositDto.getDepositAmount() + myDepositDto.getInterestAmount();
+        if (myDepositDto != null) {
+            changePointValue += myDepositDto.getInterestAmount();
+            totalDepositPoint = myDepositDto.getDepositAmount() + myDepositDto.getInterestAmount();
+        }
+        else
+            totalDepositPoint = 0L;
 
         MyPointDto myPointDto = new MyPointDto(totalPoint, changePointValue, changePointRate,availablePoint,totalStockPoint, totalDepositPoint);
 
