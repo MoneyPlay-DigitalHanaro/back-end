@@ -1,6 +1,7 @@
 package com.moneyplay.MoneyPlay.service;
 
 import com.moneyplay.MoneyPlay.domain.CurrentStock;
+import com.moneyplay.MoneyPlay.domain.Point;
 import com.moneyplay.MoneyPlay.domain.User;
 import com.moneyplay.MoneyPlay.domain.dto.MyDepositDto;
 import com.moneyplay.MoneyPlay.domain.dto.MyPointDto;
@@ -22,8 +23,6 @@ import java.util.NoSuchElementException;
 @Transactional
 public class MyPageService {
 
-    private final UserRepository userRepository;
-
     private final PointRepository pointRepository;
 
     private final CurrentStockRepository currentStockRepository;
@@ -42,7 +41,6 @@ public class MyPageService {
             changePointValue += myStockDtoList.get(i).getChangeStockValue();
             totalStockPoint += myStockDtoList.get(i).getTotalStockValue();
         }
-        //saveUserStockPoint(user ,totalStockPoint);
 
         System.out.println("수익 포인트= " + changePointValue + "  총 주식 포인트= " + totalStockPoint);
 
@@ -58,6 +56,11 @@ public class MyPageService {
         }
         else
             totalDepositPoint = 0L;
+
+        // 유저의 총 주식 가치 포인트 저장
+        saveUserStockPoint(user ,totalStockPoint);
+        // 유저의 총 예금 가치 포인트 저장
+        saveUserDepositPoint(user, totalDepositPoint);
 
         MyPointDto myPointDto = new MyPointDto(totalPoint, changePointValue, changePointRate,availablePoint,totalStockPoint, totalDepositPoint);
 
@@ -93,6 +96,24 @@ public class MyPageService {
 
 
         return myStockDtoList;
+    }
+
+    public void saveUserStockPoint(User user, Long totalStockPoint) {
+        Point point = pointRepository.findByUser(user).orElseThrow(
+                () -> new NoSuchElementException("해당 유저의 포인트 정보가 존재하지 않습니다.")
+        );
+
+        point.updateStockPoint(totalStockPoint);
+        pointRepository.save(point);
+    }
+
+    public void saveUserDepositPoint(User user, Long totalDepositPoint) {
+        Point point = pointRepository.findByUser(user).orElseThrow(
+                () -> new NoSuchElementException("해당 유저의 포인트 정보가 존재하지 않습니다.")
+        );
+
+        point.updateDepositPoint(totalDepositPoint);
+        pointRepository.save(point);
     }
 
 }
