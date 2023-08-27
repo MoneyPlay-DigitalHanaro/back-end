@@ -31,6 +31,4 @@ public class Deposit {
     private DepositType depositType;
 
 
-
-
 }
