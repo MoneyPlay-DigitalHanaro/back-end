@@ -76,6 +76,9 @@ public class AdminController {
 
         for (int i = 0; i < users.size(); i++) {
             users.get(i).getPoint().setHoldingPoint(0L);
+            users.get(i).getPoint().setSavingPoint(0L);
+            users.get(i).getPoint().setStockPoint(0L);
+
             userRepository.save(users.get(i));
         }
 
