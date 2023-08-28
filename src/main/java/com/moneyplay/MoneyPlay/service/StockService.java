@@ -128,10 +128,10 @@ public class StockService {
         // 오늘 날짜를 문자 YYYYMMDD  포맷으로 가져온다.
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Calendar c1 = Calendar.getInstance();
-            // 현재 날짜
+        // 현재 날짜
         String today = sdf.format(c1.getTime());
         c1.add(Calendar.MONTH, -3);
-            // 3달전 날짜
+        // 3달전 날짜
         String threeMonthAgo = sdf.format(c1.getTime());
 
 
@@ -220,11 +220,11 @@ public class StockService {
 
                 // 주식 종목 이름
                 String corporationName = stockData.optString("hts_kor_isnm", "");
-                    // 전일 대비 가격
+                // 전일 대비 가격
                 String previousComparePrice = stockData.optString("prdy_vrss", "");
-                    // 전일 대비율
+                // 전일 대비율
                 String previousCompareRate = stockData.optString("prdy_ctrt", "");
-                    // 주식 현재 가격
+                // 주식 현재 가격
                 String stockPresentPrice = stockData.optString("stck_prpr", "");
 
                 // 위에서 문자열로 받은 데이터를 이용해 주식 상세정보 Dto 객체 설정
@@ -267,7 +267,7 @@ public class StockService {
         return null;
     }
 
-    // 모든 주식에 대한 정보를 반환
+    // 해당 주식에 대한 정보를 반환
     public StockDataDto getStockData(String accessToken, String code) {
 
         System.out.println("======== 모든 주식 데이터 리스트를 반환하는 로직 start======");
@@ -392,12 +392,13 @@ public class StockService {
         return null;
     }
 
+    // 모든 주식에 대한 정보를 반환
     public List<StockDataDto> getAllStockData(String accessToken) {
         List<StockDataDto> stockDataList = new ArrayList<>();
         List<Corporation> corporations = corporationRepository.findAll();
 
         for (int i=0; i<corporations.size(); i++) {
-             stockDataList.add(getStockData(accessToken, corporations.get(i).getCode()));
+            stockDataList.add(getStockData(accessToken, corporations.get(i).getCode()));
         }
 
         return stockDataList;

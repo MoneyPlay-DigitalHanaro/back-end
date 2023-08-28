@@ -2,6 +2,8 @@ package com.moneyplay.MoneyPlay.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -16,6 +18,7 @@ public class Deposit {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     private Long DepositAmount;
@@ -30,7 +33,7 @@ public class Deposit {
     @JoinColumn(name = "deposit_type_id")
     private DepositType depositType;
 
-
+    private Long week;
 
 
 }
