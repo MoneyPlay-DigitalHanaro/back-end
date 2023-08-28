@@ -80,4 +80,8 @@ public class User {
     public void setTotalHoldingPoint(Long totalHoldingPoint) {
         TotalHoldingPoint = totalHoldingPoint;
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1b245fd90b881b754493d7ab9a5926f2c32bc4a9
 }

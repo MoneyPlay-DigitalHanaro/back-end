@@ -41,4 +41,15 @@ public class Point {
     public void updateHoldingPoint(Long holdingPoint) {
         this.holdingPoint = holdingPoint;
     }
+<<<<<<< HEAD
+=======
+
+    public void updateStockPoint(Long stockPoint) {
+        this.stockPoint = stockPoint;
+    }
+
+    public void updateDepositPoint(Long depositPoint) {
+        this.savingPoint = depositPoint;
+    }
+>>>>>>> 1b245fd90b881b754493d7ab9a5926f2c32bc4a9
 }

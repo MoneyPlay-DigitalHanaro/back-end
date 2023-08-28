@@ -127,6 +127,7 @@ public class UserService {
             user = userRepository.findByEmail(profile.getKakao_account().getEmail()).get();
         } catch (NoSuchElementException e) {
 
+<<<<<<< HEAD
             Long classRoomId = 1L;
             Long schoolId = 1L;
             Boolean isTeacher = false;
@@ -154,6 +155,8 @@ public class UserService {
                     .build();
 
             userRepository.save(user);
+=======
+>>>>>>> 1b245fd90b881b754493d7ab9a5926f2c32bc4a9
         }
 
         return createToken(user);
@@ -225,7 +228,10 @@ public class UserService {
     public void serviceLogout(PrincipalDetails principalDetails){
         // 서비스 로그아웃
         OauthToken oauthToken = OauthTokenMap.getInstance().getOauthTokens().get(principalDetails.getUser().getUserId());
+<<<<<<< HEAD
         System.out.println(oauthToken);
+=======
+>>>>>>> 1b245fd90b881b754493d7ab9a5926f2c32bc4a9
 
         RestTemplate rt = new RestTemplate();
 

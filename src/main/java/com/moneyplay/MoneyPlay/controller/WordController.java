@@ -21,11 +21,21 @@ public class WordController {
     @GetMapping("/word")
     public List<WordToday> word(){
 
+<<<<<<< HEAD
         // CreateWords 실행해서 단어 DB에 저장하기 : 전체 단어 생성 필요할 때 필요할 때 주석 풀어주기
 
 //         CreateWords createWords = new CreateWords(wordRepository);
 //         createWords.CreateWords();
 
+=======
+         // CreateWords 실행해서 단어 DB에 저장하기 : 전체 단어 생성 필요할 때 필요할 때 주석 풀어주기
+
+//         CreateWords createWords = new CreateWords(wordRepository);
+//         createWords.CreateWords();
+//
+//         ShuffleWords shuffleWords = new ShuffleWords(wordTodayRepository,wordRepository);
+//         shuffleWords.ShuffleWord();
+>>>>>>> 1b245fd90b881b754493d7ab9a5926f2c32bc4a9
 
         List<WordToday> words = wordTodayRepository.findAll();
 

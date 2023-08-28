@@ -121,10 +121,30 @@ public class StockController {
 
     @ApiOperation(value = "주식 매도")
     @PostMapping("/sell")
+<<<<<<< HEAD
     public ResponseEntity<?> stockSell(@RequestHeader("Authorization") String tokens, @Validated @RequestBody StockBuyDto stockBuyDto) {
         try {
 
             return new ResponseEntity<>("매도 성공", HttpStatus.OK);
+=======
+    public ResponseEntity<?> stockSell(@RequestHeader("Authorization") String tokens, @Validated @RequestBody StockSellDto stockSellDto) {
+        try {
+
+            // 헤더에서 토큰을 가져온다.
+            String token =tokens.substring(7);
+
+            // 토큰값을 decode하여 id값을 가져온다.
+            DecodedJWT decodedJWT = JWT.decode(token);
+            Long id = decodedJWT.getClaim("id").asLong();
+
+            // userId를 이용해 유저 정보를 가져온다.
+            User user = userRepository.findByUserId(id).orElseThrow(
+                    () -> new NoSuchElementException("해당 유저에 대한 정보가 없습니다.")
+            );
+            String response = stockService.sellStock(user, stockSellDto);
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+>>>>>>> 1b245fd90b881b754493d7ab9a5926f2c32bc4a9
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

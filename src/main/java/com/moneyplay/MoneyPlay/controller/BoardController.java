@@ -66,7 +66,13 @@ public class BoardController {
     @PostMapping("/board")
     public List<BoardDto> write(@RequestBody Map<String, String> requestBody,@RequestHeader("Authorization") String token2){
 
+<<<<<<< HEAD
         String token = token2.substring(7);
+=======
+
+        String token = token2.substring(7);
+        System.out.println(token);
+>>>>>>> 1b245fd90b881b754493d7ab9a5926f2c32bc4a9
 
         DecodedJWT decodedJWT = JWT.decode(token);
         Long id = decodedJWT.getClaim("id").asLong();

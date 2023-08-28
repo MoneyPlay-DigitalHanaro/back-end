@@ -11,25 +11,43 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+<<<<<<< HEAD
+=======
+import javax.transaction.Transactional;
+>>>>>>> 1b245fd90b881b754493d7ab9a5926f2c32bc4a9
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 
 @RequiredArgsConstructor
 @Component
+<<<<<<< HEAD
 
+=======
+@Transactional
+>>>>>>> 1b245fd90b881b754493d7ab9a5926f2c32bc4a9
 public class DepositScheduler {
 
     final DepositRepository depositRepository;
     final DepositTypeRepository depositTypeRepository;
     final UserRepository userRepository;
 
+<<<<<<< HEAD
 //
     @Scheduled(cron = "0 0 0 * * *")
 //@Scheduled(fixedRate = 5000) // 5초마다 실행
     public void Scheduler() {
 
         // 매일 정각에 만기가 되었는지, 이자 지급 일자 인지 체크
+=======
+
+    @Scheduled(cron = "0 0 0 * * *")
+
+//     @Scheduled(fixedRate = 5000) // 5초마다 실행
+    public void Scheduler() {
+
+        // 매일 정각에 만기일인지 체크
+>>>>>>> 1b245fd90b881b754493d7ab9a5926f2c32bc4a9
 
         LocalDate currentDate = LocalDate.now();
         List<Deposit> deposits = depositRepository.findAll();
@@ -39,7 +57,11 @@ public class DepositScheduler {
         int todayYear = currentDate.getYear();
         int todayMonth = currentDate.getMonthValue();
         int todayDay = currentDate.getDayOfMonth();
+<<<<<<< HEAD
         DayOfWeek todayWeek = currentDate.getDayOfWeek(); // 오늘 요일
+=======
+
+>>>>>>> 1b245fd90b881b754493d7ab9a5926f2c32bc4a9
 
 
         for(int i=0; i<deposits.size(); i++){
@@ -49,17 +71,26 @@ public class DepositScheduler {
             User user = deposits.get(i).getUser();
 
             // 적금 시작 날짜
+<<<<<<< HEAD
 
             int startYear = deposits.get(i).getStartDate().getYear();
             int startMonth = deposits.get(i).getStartDate().getMonthValue();
             int startDay = deposits.get(i).getStartDate().getDayOfMonth();
             DayOfWeek startWeek = deposits.get(i).getStartDate().getDayOfWeek();
+=======
+//
+//            int startYear = deposits.get(i).getStartDate().getYear();
+//            int startMonth = deposits.get(i).getStartDate().getMonthValue();
+//            int startDay = deposits.get(i).getStartDate().getDayOfMonth();
+
+>>>>>>> 1b245fd90b881b754493d7ab9a5926f2c32bc4a9
 
             // 적금 만기 날짜
 
             int endYear = deposits.get(i).getEndDate().getYear();
             int endMonth = deposits.get(i).getEndDate().getMonthValue();
             int endDay = deposits.get(i).getEndDate().getDayOfMonth();
+<<<<<<< HEAD
             DayOfWeek endWeek = deposits.get(i).getEndDate().getDayOfWeek();
 
             // 만기일의 요일을 구한 후 같을 때
@@ -74,12 +105,30 @@ public class DepositScheduler {
                     // 보유 금액 늘려주기 + 추가 이자 지급
 
                     user.getPoint().setHoldingPoint(user.getPoint().getHoldingPoint()+ deposits.get(i).getDepositAmount()+ deposits.get(i).getInterestAmount() + deposits.get(i).getDepositAmount()* deposits.get(i).getDepositType().getDepositInterestRate()/100);
+=======
+
+
+            // 오늘이 만기일이라면
+
+
+            if(todayYear == endYear && todayMonth == endMonth && todayDay == endDay){
+
+                    // 원금 + 원금*(0.5+주) 지급
+
+                    user.getPoint().setHoldingPoint((long) (
+
+                            user.getPoint().getHoldingPoint()+
+                            deposits.get(i).getDepositAmount()+
+                            deposits.get(i).getDepositAmount()*(0.5+deposits.get(i).getWeek()*0.1)/100
+                    ));
+>>>>>>> 1b245fd90b881b754493d7ab9a5926f2c32bc4a9
 
                     // 적금 금액 감소시키기
 
                     user.getPoint().setSavingPoint(user.getPoint().getSavingPoint()-deposits.get(i).getDepositAmount());
 
                     userRepository.save(user);
+<<<<<<< HEAD
 
                     depositRepository.delete(deposits.get(i));
                 }
@@ -96,6 +145,11 @@ public class DepositScheduler {
                         depositRepository.save(deposits.get(i));
                     }
                 }
+=======
+                    depositRepository.delete(deposits.get(i));
+                }
+
+>>>>>>> 1b245fd90b881b754493d7ab9a5926f2c32bc4a9
 
             }
 
@@ -103,4 +157,8 @@ public class DepositScheduler {
 
     }
 
+<<<<<<< HEAD
 }
+=======
+
+>>>>>>> 1b245fd90b881b754493d7ab9a5926f2c32bc4a9

@@ -26,12 +26,19 @@ public class PointUpdateScheduler {
 
     // 날짜 확인 후 자정에 스케쥴러 실행
 
+<<<<<<< HEAD
 
     //@Scheduled(fixedRate = 5000) // 5초마다 실행
     @Scheduled(cron = "0 0 0 * * *")
     public void Scheduler() {
 
 
+=======
+    @Scheduled(cron = "0 0 0 * * *")
+//    @Scheduled(fixedRate = 5000) // 5초마다 실행
+    public void Scheduler() {
+
+>>>>>>> 1b245fd90b881b754493d7ab9a5926f2c32bc4a9
         // ClassDailyPoint 업데이트
 
         List<ClassRoom> classRooms = classRoomRepository.findAll();
