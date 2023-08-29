@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+
+##### application-rds.properties ######
+src/main/resources/application-rds.properties
