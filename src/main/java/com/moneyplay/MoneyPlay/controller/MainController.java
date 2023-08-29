@@ -5,6 +5,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.moneyplay.MoneyPlay.domain.User;
 import com.moneyplay.MoneyPlay.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,6 @@ public class MainController {
         User user = userRepository.findByuserId(userId);
 
         List<User> userList = userRepository.findAll();
-
+        return new ResponseEntity<>("", HttpStatus.OK);
     }
 }

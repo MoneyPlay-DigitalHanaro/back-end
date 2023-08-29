@@ -1,3 +1,4 @@
+/*
 package com.moneyplay.MoneyPlay.service.SchdulerService;
 
 import com.moneyplay.MoneyPlay.domain.CurrentStock;
@@ -188,14 +189,16 @@ public class UserPointUpdateScheduler {
         System.out.println("Today= " + today);
 
         String requestUrl = "https://openapivts.koreainvestment.com:29443/uapi/domestic-stock/v1/quotations/inquire-daily-itemchartprice?FID_COND_MRKT_DIV_CODE=J&FID_INPUT_ISCD="+ code +"&FID_INPUT_DATE_1="+ today +"&FID_INPUT_DATE_2="+ today +"&FID_PERIOD_DIV_CODE=D&FID_ORG_ADJ_PRC=1";
-        /*String requestParam = "{\n" +
+        */
+/*String requestParam = "{\n" +
                 "    \"FID_COND_MRKT_DIV_CODE\": \"J\",\n" +
                 "    \"FID_INPUT_ISCD\": \"005930\",\n" +
                 "    \"FID_INPUT_DATE_1\": \"20220501\",\n" +
                 "    \"FID_INPUT_DATE_2\": \"20220530\",\n" +
                 "    \"FID_PERIOD_DIV_CODE\": \"D\",\n" +
                 "    \"FID_ORG_ADJ_PRC\": \"1\"\n" +
-                "}";*/
+                "}";*//*
+
 
         HttpURLConnection conn = null;
         BufferedReader br = null;
@@ -388,3 +391,4 @@ public class UserPointUpdateScheduler {
     }
 
 }
+*/
