@@ -42,10 +42,10 @@ public class StockService {
     private final PointRepository pointRepository;
 
     private final UserRepository userRepository;
-    ObjectMapper mapper;
+    //ObjectMapper mapper;
 
     // 한국 투자 증권 open api 토큰 발급
-    public StockAPITokenDto getApiToken(){
+/*    public StockAPITokenDto getApiToken(){
         String totalUrl = "https://openapivts.koreainvestment.com:29443//oauth2/tokenP";
         String requestBody = "{\n" +
                 "    \"grant_type\": \"client_credentials\",\n" +
@@ -110,6 +110,18 @@ public class StockService {
             e.printStackTrace();
         }
         return null;
+    }*/
+
+    // 잦은 토큰발급으로 인해 한국투자증권에서 경고 문자가 와서 토큰 발큽하는 api를 아래와 같이 대체하여 처리했다.
+    public StockAPITokenDto getApiToken(){
+
+        String accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0b2tlbiIsImF1ZCI6Ijg4MjVhNzU1LWU1N2YtNDM3My1hYWQzLWUwYTA3OWYwYjY2YiIsImlzcyI6InVub2d3IiwiZXhwIjoxNjkzMzU1MTQ2LCJpYXQiOjE2OTMyNjg3NDYsImp0aSI6IlBTT2NtNDdVaFpaakg1NjM4aWxnYUFjc1FVOG1LSHJ4dG56YSJ9.rGQShtYXCDiLP7PTUm9bWaOlQapFa9_YqFHbuLXJf9IbsvuAuzzsDohn7Gb2dhSgCq4ppsKHY8Nqn6id1a4w9Q";
+        String tokenType = "Bearer";
+        int expiresIn = 86400;
+        System.out.println("접속 토큰 : " + accessToken);
+        System.out.println("토큰 유형 : " + tokenType);
+        System.out.println("expiresIn : " + expiresIn);
+        return new StockAPITokenDto(accessToken, tokenType, expiresIn);
     }
 
     // 국내주식기간별시세
