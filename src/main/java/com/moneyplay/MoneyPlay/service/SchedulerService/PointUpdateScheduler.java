@@ -1,4 +1,4 @@
-package com.moneyplay.MoneyPlay.service.DailyService;
+package com.moneyplay.MoneyPlay.service.SchedulerService;
 
 import com.moneyplay.MoneyPlay.domain.ClassDailyPoint;
 import com.moneyplay.MoneyPlay.domain.ClassRoom;
