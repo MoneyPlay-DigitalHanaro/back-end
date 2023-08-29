@@ -16,7 +16,7 @@ public class DepositType {
 
     private String DepositName;
 
-    private Long DepositInterestRate;
+    private double DepositInterestRate;
 
     private Long minAmount;
 

@@ -75,10 +75,16 @@ public class User {
         return new ArrayList<>();
     }
 
+
+    @Column(name = "total_holding_point")
     private Long TotalHoldingPoint;
 
     public void setTotalHoldingPoint(Long totalHoldingPoint) {
         TotalHoldingPoint = totalHoldingPoint;
+    }
+
+    public Long getTotalHoldingPoint() {
+        return TotalHoldingPoint;
     }
 
 }

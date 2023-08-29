@@ -7,7 +7,7 @@ import com.moneyplay.MoneyPlay.domain.ClassRoom;
 import com.moneyplay.MoneyPlay.domain.User;
 import com.moneyplay.MoneyPlay.domain.UserDailyPoint;
 import com.moneyplay.MoneyPlay.domain.dto.AdminDataDto;
-import com.moneyplay.MoneyPlay.domain.dto.AdminDto;
+import com.moneyplay.MoneyPlay.domain.dto.MainDto;
 import com.moneyplay.MoneyPlay.repository.ClassRoomRepository;
 import com.moneyplay.MoneyPlay.repository.DailyRepository.ClassDailyPointRepository;
 import com.moneyplay.MoneyPlay.repository.DailyRepository.UserDailyPointRepository;
@@ -17,7 +17,10 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins="*")
 @RestController
@@ -28,6 +31,7 @@ public class AdminController {
     final ClassRoomRepository classRoomRepository;
     final UserDailyPointRepository userDailyPointRepository;
     final ClassDailyPointRepository classDailyPointRepository;
+
 
     // 메인 페이지, 학생 관리 페이지 접속
 
@@ -115,21 +119,69 @@ public class AdminController {
     }
 
 
-    // 학생 정보 수정
+//    // 학생 정보 수정
+//
+//    @Transactional
+//    @PostMapping("/admin/modify")
+//    public void modify(User user){
+//
+//        // id
+//        // 이름
+//        // 이메일
+//        // 포인트
+//
+//        userRepository.save(user);
+//
+//
+//    }
 
-    @Transactional
-    @PostMapping("/admin/modify")
-    public void modify(User user){
-
-        // id
-        // 이름
-        // 이메일
-        // 포인트
-
-        userRepository.save(user);
 
 
+
+
+    // 메인페이지 접속 시 상위 3명 포인트 반환
+
+    @GetMapping("/main")
+    public List<MainDto> main(@RequestHeader("Authorization") String tokens){
+
+        String token = tokens.substring(7);
+
+        DecodedJWT decodedJWT = JWT.decode(token);
+        Long id = decodedJWT.getClaim("id").asLong();
+
+        User user = userRepository.findByuserId(id);
+        ClassRoom classRooms = user.getClassRoom();
+
+        ClassRoom classRoom = classRoomRepository.findByclassRoomId(classRooms.getClassRoomId());
+        List<User> users = userRepository.findByClassRoom(classRoom);
+
+        List<User> sortedUsers = users.stream()
+                .sorted(Comparator.comparingLong(User::getTotalHoldingPoint).reversed())
+                .limit(3)
+                .collect(Collectors.toList());
+
+        List<MainDto> mainDtos = new ArrayList<>();
+
+        for(int i=0; i<3; i++){
+            MainDto mainDto = new MainDto();
+            mainDto.setId(sortedUsers.get(i).getUserId());
+            mainDto.setName(sortedUsers.get(i).getStudentName());
+            mainDto.setPoint(sortedUsers.get(i).getTotalHoldingPoint());
+            mainDto.setIndex(0);
+            mainDtos.add(mainDto);
+        }
+
+        MainDto mainDto = new MainDto();
+
+        mainDto.setId(user.getUserId());
+        mainDto.setName(user.getStudentName());
+        mainDto.setPoint(user.getTotalHoldingPoint());
+        mainDto.setIndex(1);
+        mainDtos.add(mainDto);
+
+        return mainDtos;
     }
+
 
 
 
