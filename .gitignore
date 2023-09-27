@@ -38,4 +38,4 @@ out/
 
 
 ##### application-rds.properties ######
-src/main/resources/application-rds.properties
+#src/main/resources/application-rds.properties
