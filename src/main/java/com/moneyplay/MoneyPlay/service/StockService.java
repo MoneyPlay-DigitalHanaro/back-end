@@ -42,6 +42,12 @@ public class StockService {
     private final PointRepository pointRepository;
 
     private final UserRepository userRepository;
+
+    private static final String appkey="PS9nb75j4sbAZVA5kyUNvHQ3QimvA7tPNR48";
+
+    private static final String appsecret="9W4X6Nqet+NT8yDzLJLgl/4OUOiu7idrnNYouVTjlBPx1qu7yWzdSr+T8JrA1ChnAR2FspG7W7/Am7A89d1R2w37Arrdi/k9Zq81K3wLS2bj5adRYwCS07YLCplpWwO/GCBGwEx1r4/GuuIEzOuuqPskk74BPcaoM4Ya/BueW4CNU+VTYNo=";
+
+
     //ObjectMapper mapper;
 
     // 한국 투자 증권 open api 토큰 발급
@@ -115,7 +121,7 @@ public class StockService {
     // 잦은 토큰발급으로 인해 한국투자증권에서 경고 문자가 와서 토큰 발큽하는 api를 아래와 같이 대체하여 처리했다.
     public StockAPITokenDto getApiToken(){
 
-        String accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0b2tlbiIsImF1ZCI6Ijg4MjVhNzU1LWU1N2YtNDM3My1hYWQzLWUwYTA3OWYwYjY2YiIsImlzcyI6InVub2d3IiwiZXhwIjoxNjkzMzU1MTQ2LCJpYXQiOjE2OTMyNjg3NDYsImp0aSI6IlBTT2NtNDdVaFpaakg1NjM4aWxnYUFjc1FVOG1LSHJ4dG56YSJ9.rGQShtYXCDiLP7PTUm9bWaOlQapFa9_YqFHbuLXJf9IbsvuAuzzsDohn7Gb2dhSgCq4ppsKHY8Nqn6id1a4w9Q";
+        String accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0b2tlbiIsImF1ZCI6ImRhZjVjZmM3LTZjNjAtNDY3My05YjFiLTRlMzUxODdlNmM3OCIsImlzcyI6InVub2d3IiwiZXhwIjoxNjk1ODc4MjU0LCJpYXQiOjE2OTU3OTE4NTQsImp0aSI6IlBTOW5iNzVqNHNiQVpWQTVreVVOdkhRM1FpbXZBN3RQTlI0OCJ9.uKDw6GYqM88uIk1VORQfhBGKS7EMaMpRuCdVf0KYb5QfMEsAqbgTR_VqIlzeqYH0tNSfryxiVDVjAyRucxCRrg";
         String tokenType = "Bearer";
         int expiresIn = 86400;
         System.out.println("접속 토큰 : " + accessToken);
@@ -174,8 +180,8 @@ public class StockService {
             conn.setRequestMethod("POST");
             conn.setRequestProperty("content-type", "application/json; utf8");
             conn.setRequestProperty("authorization", "Bearer " + accessToken);
-            conn.setRequestProperty("appkey", "PSOcm47UhZZjH5638ilgaAcsQU8mKHrxtnza");
-            conn.setRequestProperty("appsecret", "QJFlWFe02Ae+pKF2B7AOJwN9IsqyPSXR9ozWn45Q55/nq2awQ4Jt18G9/0zq4+pm+rZkZmXli4qTUeTbYTQg8nZc40K95RlyJHah4PyRFzuwv6enRZHjAT9xB7Psvliu4eutG8lLBqiEsQJKXbWEVEQDuvV9JIK3q5BIHEu13cYgCEjRS9w=");
+            conn.setRequestProperty("appkey", appkey);
+            conn.setRequestProperty("appsecret", appsecret);
             conn.setRequestProperty("tr_id", "FHKST03010100");
             conn.setRequestProperty("custtype", "P");
 
@@ -203,6 +209,7 @@ public class StockService {
             br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
             System.out.println("버퍼 처리 정상!");
         } catch (IOException e){
+            e.printStackTrace();
             br = new BufferedReader(new InputStreamReader(conn.getErrorStream(), StandardCharsets.UTF_8));
             System.out.println("예외가 발생하여 conn 에러스트림처리함.");
         } finally {
@@ -319,8 +326,8 @@ public class StockService {
             conn.setRequestMethod("POST");
             conn.setRequestProperty("content-type", "application/json; utf8");
             conn.setRequestProperty("authorization", "Bearer " + accessToken);
-            conn.setRequestProperty("appkey", "PSOcm47UhZZjH5638ilgaAcsQU8mKHrxtnza");
-            conn.setRequestProperty("appsecret", "QJFlWFe02Ae+pKF2B7AOJwN9IsqyPSXR9ozWn45Q55/nq2awQ4Jt18G9/0zq4+pm+rZkZmXli4qTUeTbYTQg8nZc40K95RlyJHah4PyRFzuwv6enRZHjAT9xB7Psvliu4eutG8lLBqiEsQJKXbWEVEQDuvV9JIK3q5BIHEu13cYgCEjRS9w=");
+            conn.setRequestProperty("appkey", appkey);
+            conn.setRequestProperty("appsecret", appsecret);
             conn.setRequestProperty("tr_id", "FHKST03010100");
             conn.setRequestProperty("custtype", "P");
 
@@ -348,6 +355,7 @@ public class StockService {
             br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
             System.out.println("버퍼 처리 정상!");
         } catch (IOException e){
+            e.printStackTrace();
             br = new BufferedReader(new InputStreamReader(conn.getErrorStream(), StandardCharsets.UTF_8));
             System.out.println("예외가 발생하여 conn 에러스트림처리함.");
         } finally {
@@ -363,7 +371,7 @@ public class StockService {
                 returnData = sb.toString();
                 String responseCode = String.valueOf(conn.getResponseCode());
                 System.out.println("http 응답 코드 : " + responseCode);
-                System.out.println("http 응답 데이터 : " + returnData);
+                System.out.println("http 응답 데이터 : " + responseData);
 
                 // JSON 형식의 응답 데이터를 파싱
                 JSONObject jsonResponse = new JSONObject(responseData);
