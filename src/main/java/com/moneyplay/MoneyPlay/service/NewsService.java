@@ -44,10 +44,10 @@ public class NewsService {
             // 뉴스 인덱스 news 객체에 값 저장
             news.setNews_index(index);
 
-//            System.out.println("imageUrl : " + news.getNews_imageUrl());
-//            System.out.println("title : " + news.getNews_title());
-//            System.out.println("content : " + news.getNews_content());
-//            System.out.println("index : " + news.getNews_index());
+            System.out.println("imageUrl : " + news.getNews_imageUrl());
+            System.out.println("title : " + news.getNews_title());
+            System.out.println("content : " + news.getNews_content());
+            System.out.println("index : " + news.getNews_index());
 
             newsList.add(news);
         }

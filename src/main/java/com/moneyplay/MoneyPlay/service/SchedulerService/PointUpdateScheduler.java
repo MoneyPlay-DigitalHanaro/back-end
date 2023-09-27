@@ -1,3 +1,4 @@
+/*
 package com.moneyplay.MoneyPlay.service.SchedulerService;
 
 import com.moneyplay.MoneyPlay.domain.ClassDailyPoint;
@@ -26,9 +27,11 @@ public class PointUpdateScheduler {
 
     // 날짜 확인 후 자정에 스케쥴러 실행
 
+
+    // @Scheduled(fixedRate = 5000) // 5초마다 실행
     @Scheduled(cron = "0 0 0 * * *")
-//    @Scheduled(fixedRate = 5000) // 5초마다 실행
     public void Scheduler() {
+
 
         // ClassDailyPoint 업데이트
 
@@ -61,7 +64,7 @@ public class PointUpdateScheduler {
 
             // 현재 총 합 구하기
             Long current_total = (long) (users.get(i).getPoint().getHoldingPoint()+
-                                users.get(i).getPoint().getSavingPoint()+users.get(i).getPoint().getStockPoint());
+                    users.get(i).getPoint().getSavingPoint()+users.get(i).getPoint().getStockPoint());
 
             LocalDate localDate = LocalDate.now();
 
@@ -72,10 +75,20 @@ public class PointUpdateScheduler {
             userRepository.save(users.get(i));
             userDailyPointRepository.save(userDailyPoint);
         }
+
+
+        for(int i=0; i<users.size(); i++){
+            users.get(i).setTotalHoldingPoint(
+                    users.get(i).getPoint().getHoldingPoint()+
+                            users.get(i).getPoint().getStockPoint()+
+                            users.get(i).getPoint().getSavingPoint()
+            );
+
+            userRepository.save(users.get(i));
+
+
+        }
+
+
     }
-}
-
-
-
-
-
+}*/
