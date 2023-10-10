@@ -1,5 +1,6 @@
 package com.moneyplay.MoneyPlay.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +23,11 @@ public class School {
     @Column(name = "school_id")
     private Long schoolId;
 
+    @Column(nullable = false)
+    private String schoolName;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "school")
     private List<User> user;
+
 }

@@ -16,6 +16,12 @@ public class CurrentStock {
 
     public CurrentStock() {}
 
+    public CurrentStock(User user, Corporation corporation, int totalPrice, int addPrice, int stockHoldingCount) {
+        this.user = user;
+        this.corporation = corporation;
+        this.totalPrice = addPrice;
+        this.stockHoldingCount = stockHoldingCount;
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "current_stock_id")
@@ -32,9 +38,19 @@ public class CurrentStock {
     private Corporation corporation;
 
     @Column(nullable = false)
-    private int averagePrice;
+    private int totalPrice;
 
     @Column(nullable = false)
     private int stockHoldingCount;
+
+
+    public void buyUpdate(int addPrice, int buyStockCount) {
+        this.totalPrice += addPrice;
+        this.stockHoldingCount += buyStockCount;
+    }
+    public void sellUpdate(int sellStockCount) {
+        this.totalPrice -= this.totalPrice/this.stockHoldingCount * sellStockCount;
+        this.stockHoldingCount -= sellStockCount;
+    }
 
 }

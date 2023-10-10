@@ -1,5 +1,6 @@
 package com.moneyplay.MoneyPlay.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,10 +28,14 @@ public class ClassRoom {
     @Column(nullable = false)
     private int studentClass;
 
-    @OneToMany(mappedBy = "classRoom")
-    private List<Chat> chats;
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "classRoom")
+//    private List<Chat> chats;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "classRoom")
     private List<User> users;
 
+    public void setClassRoomId(Long classRoomId) {
+    }
 }
